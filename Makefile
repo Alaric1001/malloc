@@ -6,9 +6,11 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/07 17:26:46 by asenat            #+#    #+#              #
-#    Updated: 2018/05/08 17:59:49 by asenat           ###   ########.fr        #
+#    Updated: 2018/05/12 18:49:14 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+.SUFFIXES:
 
 ## Retrieving HOSTTYPE if it doesn't exists
 #
@@ -38,6 +40,7 @@ COMP		:= $(CC) $(CFLAGS) -c -o
 ## Sources directories
 #
 SRC_DIRS	:= malloc
+TEST_DIRS	:= tests
 #
 
 ## Colors
@@ -63,7 +66,7 @@ $(NAME): $(LIBFT) $(OBJ_DIRS) $(OBJECTS)
 
 $(SHORT_NAME):
 	ln -fs $(NAME) $(SHORT_NAME)
-	@echo $(SHORT_NAME)$(GREEN) "->" $(PNAME)$(GREEN) "generated"
+	@echo $(SHORT_NAME)$(GREEN) "->" $(PNAME)$(GREEN) "generated"$(RESET)
 
 ## Including compilation rules
 #
@@ -73,8 +76,13 @@ include $(patsubst %, %/Rules.mk, $(SRC_DIRS))
 $(LIBFT):
 	@$(MAKELIBFT)
 
-$(OBJ_DIRS):
-	@mkdir -p $(OBJ_DIRS)
+%/$(OBJECT_DIR):
+	mkdir $@
+
+## Including tests
+#
+-include $(patsubst %, %/Rules.mk, $(TEST_DIRS))
+#
 
 .PHONY: clean
 clean:
@@ -83,7 +91,7 @@ clean:
 
 .PHONY: fclean
 fclean: clean
-	@$(RM) $(NAME) $(SHORT_NAME)
+	@$(RM) $(NAME) $(SHORT_NAME) $(TEST_TARGETS)
 	@$(MAKELIBFT) fclean
 	@echo $(NAME) "and" $(SHORT_NAME) "deleted"
 
