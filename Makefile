@@ -15,10 +15,9 @@
 ## Retrieving HOSTTYPE if it doesn't exists
 #
 ifeq ($(HOSTTYPE),)
-	HOSTTYPE := $(shell uname -m)_$(shell uname -s)
+HOSTTYPE := $(shell uname -m)_$(shell uname -s)
 endif
 #
-
 
 ## Libft
 LIBFT		:= libft/libft.a
@@ -27,12 +26,12 @@ MAKELIBFT	:= make -C libft
 
 ## Standard things
 #
-NAME		:= libft_malloc_$(HOSTTYPE).so
+NAME		= libft_malloc_$(HOSTTYPE).so
 SHORT_NAME	:= libft_malloc.so
-CC 			:= gcc
+CC 		:= gcc
 CFLAGS		:= -I. -fPIC -Wall -Wextra -Werror
 LFLAGS		:= -shared
-RM			:= rm -f
+RM		:= rm -f
 OBJECT_DIR	:= obj
 COMP		:= $(CC) $(CFLAGS) -c -o
 #
