@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 14:58:59 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/25 15:24:26 by asenat           ###   ########.fr       */
+/*   Updated: 2018/06/14 23:18:16 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,19 @@
 #include "libft/output/output.h"
 #include <stdio.h>
 
-static int		is_allocable(t_block *block, size_t size)
-{
-	return (block->free && block->size >= size);
-}
-
 t_block	*alloc_block(t_block** it, t_block* last_it, size_t size)
 {
+	t_block *ret;
+
+	if ((*it)->size < size)
+		return NULL;
+	if (!last_it)
+	{
+		ret = *it;
+		*it = NULL;
+		return ret;
+	}
+	last_it->next = (*it)->next;
 //	size_t	space_left;
 //	t_block	*new_block;
 //
@@ -49,17 +55,13 @@ t_block		*do_malloc(t_block_type type, size_t size)
 	t_block	*last_free;
 	t_block **current_free;
 
+	size = round_size(type, size);
 	last_free = NULL;
 	current_free = &g_areas[type].free_blocks;
 	while (*current_free)
 	{
 		if ((ret = alloc_block(last_free, current_free, size)))
-		   	return (ret);
-		last_free = *current_free;
-		current_free = &(*current_free)->next;
-	}
-	area = &g_areas[type].area;
-	while (*area)
+			return (ret);
 		area = &(*area)->next;
 	if (!(*area = mmap_area(type, size)))
 		return (NULL);
