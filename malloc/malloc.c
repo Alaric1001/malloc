@@ -16,7 +16,9 @@
 #include "utils/utils.h"
 #include <stdio.h>
 
-t_area_container	g_areas[3] = {{0, NULL}, {0, NULL}, {0, NULL}};
+t_area_container	g_areas[3] = 	{{0, NULL, NULL},
+									{0, NULL, NULL},
+									{0, NULL, NULL}};
 
 void	*malloc(size_t size)
 {

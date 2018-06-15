@@ -47,7 +47,6 @@ static size_t	avoid_overflow(t_block_type type, size_t area_size)
 t_area*			mmap_area(t_block_type type, size_t size)
 {
 	size_t	area_size;
-	t_area	area;
 	t_area	*ret;
 	void	*mapped_region;
 
@@ -62,10 +61,9 @@ t_area*			mmap_area(t_block_type type, size_t size)
 	if (!mapped_region)
 		return (NULL);
 	g_areas[type].total_size += area_size;
-	area.next = NULL;
-	area.size = area_size;
-	ft_memcpy(mapped_region, &area, sizeof(t_area));
 	ret = (t_area*)mapped_region;
-	ret->blocks = add_new_block(ret + 1, area_size - sizeof(t_area));
+	ret->next = NULL;
+	ret->size = area_size;
+	add_new_block(ret + 1, area_size - sizeof(t_area));
 	return (ret);
 }

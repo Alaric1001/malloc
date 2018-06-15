@@ -19,55 +19,49 @@
 t_block	*alloc_block(t_block** it, t_block* last_it, size_t size)
 {
 	t_block *ret;
+	t_block *next;
 
-	if ((*it)->size < size)
+	ret = *it;
+	if (ret->size < size)
 		return NULL;
+	if (ret->size > size + sizeof(t_block))
+	{
+		next = (t_block*)((char*)(ret + 1) + size);
+		next->size = ret->size - (size + sizeof(t_block));
+		next->next_free = ret->next_free;
+		ret->next_free = next;
+	}
+	ret->size = size;
 	if (!last_it)
 	{
-		ret = *it;
 		*it = NULL;
 		return ret;
 	}
-	last_it->next = (*it)->next;
-//	size_t	space_left;
-//	t_block	*new_block;
-//
-//	while (iterator->next && !is_allocable(iterator, size))
-//		iterator = iterator->next;
-//	if (!is_allocable(iterator, size) && !iterator->next)
-//			return (NULL);
-//	space_left = iterator->size - size;
-//	new_block = NULL;
-//	if (space_left > sizeof(t_block))
-//	{
-//		new_block = add_new_block(((char*)(iterator + 1)) + size,
-//				space_left);
-//	}
-//	iterator->free = 0;
-//	iterator->next = new_block;
-//	iterator->size = size;
-//	return (iterator);
+	last_it->next_free = ret->next_free;
+	return ret;
 }
 
 t_block		*do_malloc(t_block_type type, size_t size)
 {
-	t_area	**area;
-	t_block	*last_free;
+	t_area **area;
+	t_block *last_free;
 	t_block **current_free;
+	t_block	*ret;
 
 	size = round_size(type, size);
 	last_free = NULL;
 	current_free = &g_areas[type].free_blocks;
 	while (*current_free)
 	{
-		if ((ret = alloc_block(last_free, current_free, size)))
+		if ((ret = alloc_block(current_free, last_free, size)))
 			return (ret);
 		area = &(*area)->next;
+	}
 	if (!(*area = mmap_area(type, size)))
 		return (NULL);
 	if (*current_free)
-		(*current_free)->next = (t_block *)*area + 1;
-	last_free = current_free;
-	current_free = &(*current_free)->next;
-	return (alloc_block(last_free, current_free, size));
+		(*current_free)->next_free = (t_block *)*area + 1;
+	last_free = *current_free;
+	current_free = &(*current_free)->next_free;
+	return (alloc_block(current_free, last_free, size));
 }

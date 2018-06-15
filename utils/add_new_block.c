@@ -12,15 +12,12 @@
 
 #include "utils/utils.h"
 
-#include "libft/memory/memory.h"
-
 t_block		*add_new_block(void* location, size_t size)
 {
-	t_block block;
+	t_block *block;
 
-	block.size = size - sizeof(block);
-	block.free = 1;
-	block.next = NULL;
-	ft_memcpy(location, &block, sizeof(block));
-	return (location);
+	block = (t_block*)location;
+	block->size = size - sizeof(t_block);
+	block->next_free = NULL;
+	return (block);
 }
