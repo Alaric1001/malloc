@@ -10,6 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
 #ifndef UTILS_HPP
 # define UTILS_HPP
 
@@ -37,71 +38,101 @@ inline void unmap_everything(bool unmap_for_real = true) {
 	g_areas[2].total_size = 0;
 }
 
-struct test_block_dat {
-	std::size_t size;
-	bool free = 0;
+class SimulatedArea {
+private:
+	std::vector<char> m_mem;
+	t_area* m_area = nullptr;
+	t_block* m_free_list = nullptr;
+public:
+	void SimulatedArea(std::size_t size) : m_mem(size, 0) {
+		m_area = static_cast<t_area*>(&m_mem[0]);
+		m_area->size = size;
+	}
+
+	SimulatedArea& add_block(std::size_t location, std::size_t size, bool free = false) {
+		t_block* block = static_cast<t_block*>(&m_mem[location]);
+		assert(location + sizeof(t_block) + size <= m_mem.size());
+		block->size = size;
+		if (not free) return *this;
+		if (not m_free_list)
+			m_free_list = block;
+		else {
+			t_block* elem;
+			for (elem = m_free_list; elem->next; elem = elem->next);
+			elem->next = block;
+		}
+		return *this;
+	}
+	t_area* area() { return m_area; }
+	t_block* free_list { return m_free_list; }
 };
 
-inline std::vector<char> get_simulation_area(std::size_t size,
-		const std::vector<test_block_dat>& blocks_sizes) {
-	std::vector<char> ret(size, '\0');
-	t_area area{size, nullptr};
-	memcpy(&ret[0], &area, sizeof(area));
-	auto shift = sizeof(area);
-	t_block* last_adr = nullptr;
-	for (const auto& s : blocks_sizes) {
-		t_block b{s.size, s.free, nullptr};
-		memcpy(&ret[shift], &b, sizeof(b));
-		if (last_adr)
-			last_adr->next = (t_block*)(&ret[shift]);
-		last_adr = (t_block*)(&ret[shift]);
-		shift += sizeof(b) + s.size;
-	}
-	if (size > shift and size - shift > sizeof(t_block) + 1)
-	{
-		t_block b{size - shift, 1, nullptr};
-		memcpy(&ret[shift], &b, sizeof(b));
-		if (last_adr)
-			last_adr->next = (t_block*)(&ret[shift]);
-	}
-	((t_area*)&ret[0])->blocks = (t_block*)(&ret[sizeof(t_area)]);
-	return ret;
-}
-
-inline bool check_sim_area(const t_area* area,
-		const std::vector<test_block_dat>& ref) {
-	t_block* it = area->blocks;
-	for (auto &dat : ref) {
-		if (dat.size != it->size) {
-			std::cout << "[Err] check_sim_area (size): " << dat.size << " != " << it->size << "\n";
-			return false;
-		}
-		if ((int)dat.free != it->free) {
-			std::cout << "[Err] check_sim_area (free): " << (int)dat.free << " != " << it->free << "\n";
-			return false;
-		}
-		it = it->next;
-	}
-	return true;
-}
-
-inline std::vector<t_area*> chain_areas(t_block_type type,
-		std::initializer_list<const std::vector<char>*> areas) {
-	std::vector<t_area*> ret;
-	t_area* last = nullptr;
-	ret.resize(areas.size());
-	auto i = 0;
-	for (auto* s_a : areas) {
-		t_area* a = (t_area*)&s_a->at(0);
-		if (last)
-			last->next = a;
-		else
-			g_areas[type].area = a;
-		last = a;
-		g_areas[type].total_size += a->size;
-		ret[i++] = a;
-	}
-	return ret;
-}
-
+//
+//struct test_block_dat {
+//	std::size_t size;
+//	bool free = 0;
+//};
+//
+//inline std::vector<char> get_simulation_area(std::size_t size,
+//		const std::vector<test_block_dat>& blocks_sizes) {
+//	std::vector<char> ret(size, '\0');
+//	t_area area{size, nullptr};
+//	memcpy(&ret[0], &area, sizeof(area));
+//	auto shift = sizeof(area);
+//	t_block* last_adr = nullptr;
+//	for (const auto& s : blocks_sizes) {
+//		t_block b{s.size, s.free, nullptr};
+//		memcpy(&ret[shift], &b, sizeof(b));
+//		if (last_adr)
+//			last_adr->next = (t_block*)(&ret[shift]);
+//		last_adr = (t_block*)(&ret[shift]);
+//		shift += sizeof(b) + s.size;
+//	}
+//	if (size > shift and size - shift > sizeof(t_block) + 1)
+//	{
+//		t_block b{size - shift, 1, nullptr};
+//		memcpy(&ret[shift], &b, sizeof(b));
+//		if (last_adr)
+//			last_adr->next = (t_block*)(&ret[shift]);
+//	}
+//	((t_area*)&ret[0])->blocks = (t_block*)(&ret[sizeof(t_area)]);
+//	return ret;
+//}
+//
+//inline bool check_sim_area(const t_area* area,
+//		const std::vector<test_block_dat>& ref) {
+//	t_block* it = area->blocks;
+//	for (auto &dat : ref) {
+//		if (dat.size != it->size) {
+//			std::cout << "[Err] check_sim_area (size): " << dat.size << " != " << it->size << "\n";
+//			return false;
+//		}
+//		if ((int)dat.free != it->free) {
+//			std::cout << "[Err] check_sim_area (free): " << (int)dat.free << " != " << it->free << "\n";
+//			return false;
+//		}
+//		it = it->next;
+//	}
+//	return true;
+//}
+//
+//inline std::vector<t_area*> chain_areas(t_block_type type,
+//		std::initializer_list<const std::vector<char>*> areas) {
+//	std::vector<t_area*> ret;
+//	t_area* last = nullptr;
+//	ret.resize(areas.size());
+//	auto i = 0;
+//	for (auto* s_a : areas) {
+//		t_area* a = (t_area*)&s_a->at(0);
+//		if (last)
+//			last->next = a;
+//		else
+//			g_areas[type].area = a;
+//		last = a;
+//		g_areas[type].total_size += a->size;
+//		ret[i++] = a;
+//	}
+//	return ret;
+//}
+//
 #endif

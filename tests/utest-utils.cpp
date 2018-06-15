@@ -18,30 +18,40 @@ class AddBlockTest : public CppUnit::TestCase {
 public:
 	CPPUNIT_TEST_SUITE(AddBlockTest);
 	CPPUNIT_TEST(location);
-	CPPUNIT_TEST(block_content);
 	CPPUNIT_TEST_SUITE_END();
 
 	void location() {
-		char loc[sizeof(t_block)];
+		char loc[sizeof(t_block) + 42];
 		{
 			auto* block = add_new_block(&loc, 42);
-			block->free= 0;
 		}
-		t_block* block = (t_block*)&loc[0];
+		t_block* block = reinterpret_cast<t_block*>(&loc[0]);
 		CPPUNIT_ASSERT_EQUAL(42ul - sizeof(t_block), block->size);
-		CPPUNIT_ASSERT(!block->free);
+		CPPUNIT_ASSERT(!block->next_free);
 	}
-	void block_content() {
-		char loc[sizeof(t_block)];
-		auto* block = add_new_block(&loc, 420);
-		CPPUNIT_ASSERT_EQUAL(420ul - sizeof(t_block), block->size);
-		CPPUNIT_ASSERT_EQUAL(1, block->free);
-		CPPUNIT_ASSERT(!block->next);
+};
+
+class RoundTestSize : public CppUnit::TestCase {
+public:
+	CPPUNIT_TEST_SUITE(RoundTestSize);
+	CPPUNIT_TEST(test);
+	CPPUNIT_TEST_SUITE_END();
+
+	void test() {
+		CPPUNIT_ASSERT_EQUAL(16ul, round_size(TINY, 1ul));
+		CPPUNIT_ASSERT_EQUAL(32ul, round_size(TINY, 31ul));
+		CPPUNIT_ASSERT_EQUAL(0ul, round_size(TINY, 0ul));
+
+		CPPUNIT_ASSERT_EQUAL(512ul, round_size(SMALL, 1ul));
+		CPPUNIT_ASSERT_EQUAL(1024ul, round_size(SMALL, 958ul));
+		CPPUNIT_ASSERT_EQUAL(0ul, round_size(SMALL, 0ul));
+
+		CPPUNIT_ASSERT_EQUAL(5633ul, round_size(LARGE, 5633ul));
 	}
 };
 
 class MmapAreaTest : public CppUnit::TestCase {
-private: 
+private:
 	void basic_check(t_block_type type, std::size_t size) {
 		auto* mapped = mmap_area(type, size);
 		CPPUNIT_ASSERT(mapped);
@@ -53,9 +63,9 @@ private:
 			CPPUNIT_ASSERT_EQUAL(get_area_size(type), mapped->size);
 			CPPUNIT_ASSERT_EQUAL(get_area_size(type), g_areas[type].total_size);
 		}
-		auto* block = (t_block*)(mapped + 1);
+		auto* block = reinterpret_cast<t_block*>(mapped + 1);
 		CPPUNIT_ASSERT(block);
-		CPPUNIT_ASSERT(block->free);
+		CPPUNIT_ASSERT(not block->next_free);
 		if (type == LARGE)
 			CPPUNIT_ASSERT_EQUAL(size, block->size);
 		else
@@ -63,7 +73,7 @@ private:
 		unmap_everything();
 	}
 
-	void rlimit(std::size_t lim, std::function<void()> tests) {
+	void rlimit(std::size_t lim, std::function<void()>&& tests) {
 		struct rlimit old;
 		struct rlimit new_lim;
 		getrlimit(RLIMIT_DATA, &old);
@@ -113,7 +123,7 @@ public:
 				});
 	}
 };
-
+/*
 class UnmapAreaTest : public CppUnit::TestCase {
 public:
 	CPPUNIT_TEST_SUITE(UnmapAreaTest);
@@ -160,10 +170,11 @@ public:
 		unmap_everything();
 	}
 };
-
+*/
 CPPUNIT_TEST_SUITE_REGISTRATION(AddBlockTest);
 CPPUNIT_TEST_SUITE_REGISTRATION(MmapAreaTest);
-CPPUNIT_TEST_SUITE_REGISTRATION(UnmapAreaTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(RoundTestSize);
+//CPPUNIT_TEST_SUITE_REGISTRATION(UnmapAreaTest);
 
 int main() {
 	CppUnit::TextUi::TestRunner runner;

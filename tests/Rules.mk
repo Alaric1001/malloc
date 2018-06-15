@@ -4,14 +4,7 @@ TEST_LFLAGS		:= -L$(CPPUNIT_PATH)/lib -ldl -lcppunit -L./libft -lft
 COMPLINK		:= $(CC) $(TEST_CFLAGS) $(TEST_LFLAGS) -o
 
 CURR_DIR		:= tests
-TEST_FILES		:= 	utest-utils.cpp \
-					utest-alloc_block.cpp \
-					utest-search_in_areas.cpp \
-					utest-join_free_block_around.cpp \
-					utest-resize_block.cpp \
-					test-malloc.cpp \
-					test-free.cpp \
-					manual-tests.cpp
+TEST_FILES		:= 	utest-utils.cpp
 TEST_OBJECTS	:= $(addprefix $(CURR_DIR)/$(OBJECT_DIR)/, $(TEST_FILES:.cpp=.o))
 RUN_TEST_RULES	:= $(addprefix run-, $(TEST_FILES:.cpp=))
 
