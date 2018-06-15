@@ -1,10 +1,17 @@
 TEST_CC			:= g++
-TEST_CFLAGS		:= -I. -I$(CPPUNIT_PATH)/include
-TEST_LFLAGS		:= -L$(CPPUNIT_PATH)/lib -L. -ldl -lcppunit -lft_malloc
+TEST_CFLAGS		:= -I. -I$(CPPUNIT_PATH)/include -std='c++14' -g
+TEST_LFLAGS		:= -L$(CPPUNIT_PATH)/lib -ldl -lcppunit -L./libft -lft
 COMPLINK		:= $(CC) $(TEST_CFLAGS) $(TEST_LFLAGS) -o
 
 CURR_DIR		:= tests
-TEST_FILES		:= test.cpp
+TEST_FILES		:= 	utest-utils.cpp \
+					utest-alloc_block.cpp \
+					utest-search_in_areas.cpp \
+					utest-join_free_block_around.cpp \
+					utest-resize_block.cpp \
+					test-malloc.cpp \
+					test-free.cpp \
+					manual-tests.cpp
 TEST_OBJECTS	:= $(addprefix $(CURR_DIR)/$(OBJECT_DIR)/, $(TEST_FILES:.cpp=.o))
 RUN_TEST_RULES	:= $(addprefix run-, $(TEST_FILES:.cpp=))
 
@@ -19,11 +26,19 @@ run-all-tests: $(RUN_TEST_RULES)
 
 .PHONY: $(RUN_TEST_RULES)
 $(RUN_TEST_RULES): all $(TEST_OBJ_DIR) $(TEST_TARGETS)
-	@echo $(BLUE)"Executing test:"$(RESET) $@
-	@$(addprefix $(CURR_DIR)/, $(subst run-,, $@))
+	$(eval TEST_NAME := $(subst run-,, $@))
+	$(eval FAIL := $(shell $(addprefix $(CURR_DIR)/, $(TEST_NAME)) > $(TEST_NAME).out; echo $$?))
+	@if [ $(FAIL) -gt 0 ]; \
+	then \
+		echo "["$(RED)KO$(RESET)"] -" $(TEST_NAME); \
+		cat $(TEST_NAME).out; \
+	else \
+		echo "["$(GREEN)OK$(RESET)"] -" $(TEST_NAME); \
+	fi
+	@rm -f $(TEST_NAME).out
 
-$(CURR_DIR)/%: $(CURR_DIR)/$(OBJECT_DIR)/%.o
-	$(TEST_CC) $(TEST_LFLAGS) -o $@ $<
+$(CURR_DIR)/%: $(CURR_DIR)/$(OBJECT_DIR)/%.o $(NAME)
+	$(TEST_CC) $(TEST_LFLAGS) -o $@ $< $(OBJECTS)
 
 $(CURR_DIR)/$(OBJECT_DIR)/%.o: $(CURR_DIR)/%.cpp
 	$(TEST_CC) $(TEST_CFLAGS) -c -o $@ $<

@@ -6,7 +6,7 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/07 17:26:46 by asenat            #+#    #+#              #
-#    Updated: 2018/06/15 09:52:15 by asenat           ###   ########.fr        #
+#    Updated: 2018/06/15 09:56:10 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ MAKELIBFT	:= make -C libft
 NAME		:= libft_malloc_$(HOSTTYPE).so
 SHORT_NAME	:= libft_malloc.so
 CC 		:= gcc
-CFLAGS		:= -I. -fPIC -Wall -Wextra -Werror
+CFLAGS		:= -I. -fPIC -Wall -Wextra -Werror -g
 LFLAGS		:= -shared
 RM		:= rm -f
 OBJECT_DIR	:= obj
@@ -37,17 +37,19 @@ COMP		:= $(CC) $(CFLAGS) -c -o
 
 ## Sources directories
 #
-SRC_DIRS	:= malloc
 TEST_DIRS	:= tests
+SRC_DIRS	:= malloc utils
 #
 
 ## Colors
 #
 BLUE		:= "\033[34m"
 GREEN		:= "\033[32m"
+RED			:= "\033[31m"
 RESET		:= "\033[0m"
 PNAME		:= $(BLUE)$(NAME)$(RESET)
 #
+
 .PHONY: all
 all: $(NAME) $(SHORT_NAME)
 
