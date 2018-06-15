@@ -6,11 +6,9 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/07 17:26:46 by asenat            #+#    #+#              #
-#    Updated: 2018/05/12 18:49:14 by asenat           ###   ########.fr        #
+#    Updated: 2018/06/15 09:52:15 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
-.SUFFIXES:
 
 ## Retrieving HOSTTYPE if it doesn't exists
 #
@@ -26,7 +24,8 @@ MAKELIBFT	:= make -C libft
 
 ## Standard things
 #
-NAME		= libft_malloc_$(HOSTTYPE).so
+.SUFFIXES:
+NAME		:= libft_malloc_$(HOSTTYPE).so
 SHORT_NAME	:= libft_malloc.so
 CC 		:= gcc
 CFLAGS		:= -I. -fPIC -Wall -Wextra -Werror
