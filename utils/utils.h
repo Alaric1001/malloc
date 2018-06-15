@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 10:54:30 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/26 17:26:10 by asenat           ###   ########.fr       */
+/*   Updated: 2018/06/14 23:13:24 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,5 +20,6 @@ t_block_type	get_block_type(size_t size);
 t_area*			mmap_area(t_block_type type, size_t size);
 void			unmap_area(t_block_type type, const t_block_location *locations);
 t_block*		add_new_block(void *location, size_t size);
+size_t			round_size(t_block_type type, size_t size);
 
 #endif
