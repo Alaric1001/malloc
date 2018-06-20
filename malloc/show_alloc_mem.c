@@ -16,17 +16,6 @@
 #include "libft/output/obuff.h"
 #include "libft/memory/memory.h"
 
-static int is_in_free_list(t_block* b, t_block* free_list)
-{
-	while (free_list)
-	{
-		if(free_list == b)
-			return (1);
-		free_list = free_list->next_free;
-	}
-	return (0);
-}
-
 static void add_ptr_to_obuff(const void* ptr, t_obuff *obuff)
 {
 	ft_add_uint_base_to_obuff((uintmax_t)ptr, "0123456789ABCDEF", obuff);
@@ -55,8 +44,6 @@ static void display_blocks(const t_area_and_type *val, size_t *total_size, t_obu
 			ft_add_char_to_obuff('\n', obuff);
 			(*total_size) += 1;
 		}
-		if (!iterator->size)
-			break;
 		cursor += round_size(val->type, iterator->size) + sizeof(t_block);
 	}
 }

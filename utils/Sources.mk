@@ -3,6 +3,8 @@
 OBJ_FILES_utils  :=  add_new_block.o \
                get_area_size.o \
                get_block_type.o \
+               is_in_free_list.o \
+               iter_area.o \
                mmap_area.o \
                round_size.o \
                show_alloc_mem_utils.o \
