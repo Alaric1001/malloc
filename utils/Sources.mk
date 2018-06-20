@@ -5,5 +5,6 @@ OBJ_FILES_utils  :=  add_new_block.o \
                get_block_type.o \
                mmap_area.o \
                round_size.o \
+               show_alloc_mem_utils.o \
                unmap_area.o
 OBJECTS   += $(patsubst %, utils/$(OBJECT_DIR)/%, $(OBJ_FILES_utils))

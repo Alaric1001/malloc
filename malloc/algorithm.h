@@ -15,12 +15,12 @@
 
 # include "malloc/malloc_data.h"
 
-t_block			*do_malloc(t_block_type type, size_t size);
-t_block			*alloc_block(t_block** it, t_block* last_it, size_t size);
-t_block			*resize_block(t_block* block, size_t size);
-int				search_in_area(t_area *area, char *adr, t_block_location *result);
-int				search_in_areas(void *adr, t_block_location *result);
-void			join_free_blocks_around(const t_block_location *location);
+t_block	*do_malloc(t_block_type type, size_t size);
+t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t size);
+t_block	*resize_block(t_block* block, size_t size);
+int	   	search_in_area(t_area *area, char *adr, t_block_location *result);
+int	   	search_in_areas(void *adr, t_block_location *result);
+void   	join_free_blocks_around(const t_block_location *location);
 
 
 #endif

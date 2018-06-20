@@ -18,6 +18,7 @@ extern "C" {
 #include "utils/utils.h"
 #include "sys/mman.h"
 }
+#include <cassert>
 
 inline void unmap_everything(bool unmap_for_real = true) {
 	auto unmap = [&](t_area** area) {
@@ -44,27 +45,41 @@ private:
 	t_area* m_area = nullptr;
 	t_block* m_free_list = nullptr;
 public:
-	void SimulatedArea(std::size_t size) : m_mem(size, 0) {
-		m_area = static_cast<t_area*>(&m_mem[0]);
+	SimulatedArea(std::size_t size, bool default_block = true) : m_mem(size, 0) {
+		m_area = reinterpret_cast<t_area*>(&m_mem[0]);
 		m_area->size = size;
+		if (default_block) {
+			m_free_list = reinterpret_cast<t_block *>(&m_mem[sizeof(t_area)]);
+			m_free_list->size = size - (sizeof(t_area) + sizeof(t_block));
+		}
 	}
 
 	SimulatedArea& add_block(std::size_t location, std::size_t size, bool free = false) {
-		t_block* block = static_cast<t_block*>(&m_mem[location]);
+		location += sizeof(t_area);
 		assert(location + sizeof(t_block) + size <= m_mem.size());
+		t_block* block = reinterpret_cast<t_block*>(&m_mem[location]);
 		block->size = size;
+		block->next_free = nullptr;
 		if (not free) return *this;
 		if (not m_free_list)
 			m_free_list = block;
 		else {
 			t_block* elem;
-			for (elem = m_free_list; elem->next; elem = elem->next);
-			elem->next = block;
+			for (elem = m_free_list; elem->next_free; elem = elem->next_free);
+			elem->next_free = block;
 		}
 		return *this;
 	}
 	t_area* area() { return m_area; }
-	t_block* free_list { return m_free_list; }
+	const t_area* area() const { return m_area; }
+	t_block** d_free_list() { return &m_free_list; }
+	t_block *free_list() { return m_free_list; }
+
+	void chain(SimulatedArea& a) {
+		t_block* elem;
+		for (elem = m_free_list; elem->next_free; elem = elem->next_free);
+		elem->next_free = a.free_list();
+	}
 };
 
 //

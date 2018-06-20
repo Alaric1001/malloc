@@ -11,3 +11,8 @@ libft/output/output.h:
 malloc/$(OBJECT_DIR)/malloc.o: malloc/malloc.c malloc/malloc.h \
   malloc/algorithm.h malloc/malloc_data.h utils/utils.h
 malloc/malloc.h:
+malloc/$(OBJECT_DIR)/show_alloc_mem.o: malloc/show_alloc_mem.c \
+  malloc/malloc.h utils/utils.h malloc/malloc_data.h \
+  libft/output/obuff.h libft/memory/memory.h
+libft/output/obuff.h:
+libft/memory/memory.h:
