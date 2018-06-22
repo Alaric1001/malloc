@@ -38,7 +38,7 @@ typedef struct		s_block_location
 {
 	t_area*		prev_area;
 	t_area*		loc_area;
-	t_block*	prev;
+	t_block*	prev_free;
 	t_block*	loc;
 }					t_block_location;
 

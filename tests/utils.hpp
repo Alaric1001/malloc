@@ -40,12 +40,32 @@ inline void unmap_everything(bool unmap_for_real = true) {
 }
 
 class SimulatedArea {
+public:
+	struct Block { std::size_t size; bool free = false; };
+	bool iter_area(const SimulatedArea &sim_area,
+	               const std::function<bool(const t_block *)> &action) const
+	{
+		std::size_t cursor = sizeof(t_area);
+		auto* area = sim_area.area();
+		while (static_cast<int>(area->size - cursor)
+				> static_cast<int>(sizeof(t_block))) {
+			const t_block *block = reinterpret_cast<const t_block *>(
+			reinterpret_cast<const char *>(area) + cursor);
+			if (not action(block))
+				return false;
+			cursor += round_size(sim_area.type(), block->size) + sizeof(t_block);
+		}
+		return true;
+	}
+
 private:
 	std::vector<char> m_mem;
 	t_area* m_area = nullptr;
 	t_block* m_free_list = nullptr;
+	t_block_type m_type;
 public:
-	SimulatedArea(std::size_t size, bool default_block = true) : m_mem(size, 0) {
+	SimulatedArea(std::size_t size, bool default_block = true, t_block_type type = TINY)
+	: m_mem(size, 0), m_type(type) {
 		m_area = reinterpret_cast<t_area*>(&m_mem[0]);
 		m_area->size = size;
 		if (default_block) {
@@ -72,6 +92,7 @@ public:
 	}
 	t_area* area() { return m_area; }
 	const t_area* area() const { return m_area; }
+	t_block_type type() const { return m_type; }
 	t_block** d_free_list() { return &m_free_list; }
 	t_block *free_list() { return m_free_list; }
 
@@ -79,8 +100,31 @@ public:
 		t_block* elem;
 		for (elem = m_free_list; elem->next_free; elem = elem->next_free);
 		elem->next_free = a.free_list();
+		area()->next = a.area();
+	}
+
+	void set_in_g_areas(t_block_type type) {
+		g_areas[type].area = area();
+		g_areas[type].free_blocks = free_list();
+	}
+
+	bool operator==(const std::vector<Block>& rhs) const {
+		bool ret = true;
+		std::size_t i = 0;
+		SimulatedArea::iter_area(*this, [&](const t_block *block) {
+			if (i > rhs.size())
+				return ret;
+			const auto& ref = rhs[i++];
+			if (block->size == ref.size and ref.free != is_in_free_list(block, this->m_free_list))
+				return true;
+			std::cerr << "[err] s=" << block->size
+			          << ", f=" << is_in_free_list(block, this->m_free_list) << "\n";
+			return ret = false;
+		});
+		return ret;
 	}
 };
+
 
 //
 //struct test_block_dat {

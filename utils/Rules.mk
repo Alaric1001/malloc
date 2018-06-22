@@ -11,8 +11,6 @@ utils/$(OBJECT_DIR)/get_block_type.o: utils/get_block_type.c \
   malloc/malloc_data.h
 utils/$(OBJECT_DIR)/is_in_free_list.o: utils/is_in_free_list.c \
   utils/utils.h malloc/malloc_data.h
-utils/$(OBJECT_DIR)/iter_area.o: utils/iter_area.c utils/utils.h \
-  malloc/malloc_data.h
 utils/$(OBJECT_DIR)/mmap_area.o: utils/mmap_area.c utils/utils.h \
   malloc/malloc_data.h libft/memory/memory.h
 libft/memory/memory.h:
