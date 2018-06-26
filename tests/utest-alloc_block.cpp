@@ -44,6 +44,7 @@ public:
 		t_block *second =
 		reinterpret_cast<t_block *>(reinterpret_cast<char*>(first + 1) + 16);
 		CPPUNIT_ASSERT(second);
+		CPPUNIT_ASSERT(!first->next_free);
 		CPPUNIT_ASSERT_EQUAL(12ul, first->size);
 		CPPUNIT_ASSERT_EQUAL(real_mem_size - sizeof(t_block) - 16, second->size);
 		CPPUNIT_ASSERT_EQUAL(16ul + sizeof(t_block),

@@ -34,11 +34,10 @@ t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t s
 		ret->next_free = next;
 	}
 	ret->size = size;
-	if (!last_it) {
+	if (!last_it)
 		*it = ret->next_free;
-		return ret;
-	}
-	last_it->next_free = ret->next_free;
+	else
+		last_it->next_free = ret->next_free;
 	ret->next_free = NULL;
 	return ret;
 }
