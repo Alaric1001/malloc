@@ -16,6 +16,8 @@
 #include "libft/output/obuff.h"
 #include "libft/memory/memory.h"
 
+#define FTMALL_SHOW_FREE 1
+
 static void add_ptr_to_obuff(const void* ptr, t_obuff *obuff)
 {
 	ft_add_uint_base_to_obuff((uintmax_t)ptr, "0123456789ABCDEF", obuff);
@@ -31,7 +33,7 @@ static void display_blocks(const t_area_and_type *val, size_t *total_size, t_obu
 	while ((int)(area->size - cursor) > (int)sizeof(t_block))
 	{
 		iterator = (t_block *)((char *)(area) + cursor);
-		if (!is_in_free_list(iterator, g_areas[val->type].free_blocks))
+		if (FTMALL_SHOW_FREE || !is_in_free_list(iterator, g_areas[val->type].free_blocks))
 		{
 			add_ptr_to_obuff(iterator + 1, obuff);
 			ft_add_str_to_obuff(" - ", obuff);
@@ -42,7 +44,7 @@ static void display_blocks(const t_area_and_type *val, size_t *total_size, t_obu
 			if (iterator->size > 1 && iterator->size)
 				ft_add_char_to_obuff('s', obuff);
 			ft_add_char_to_obuff('\n', obuff);
-			(*total_size) += 1;
+			(*total_size) += iterator->size;
 		}
 		cursor += round_size(val->type, iterator->size) + sizeof(t_block);
 	}

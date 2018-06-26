@@ -32,46 +32,71 @@ public:
 	CPPUNIT_TEST_SUITE(JoinFreeBlocksTest);
 	CPPUNIT_TEST(no_free_blocks);
 	CPPUNIT_TEST(free_block_after);
-//	CPPUNIT_TEST(free_block_after2);
-//	CPPUNIT_TEST(free_block_before);
-//	CPPUNIT_TEST(free_block_around);
+	CPPUNIT_TEST(free_block_after2);
+	CPPUNIT_TEST(free_block_before);
+	CPPUNIT_TEST(free_block_around);
 	CPPUNIT_TEST_SUITE_END();
 
 	void no_free_blocks() {
-		SimulatedArea sim_area(64);
-		sim_area.add_block(0, 5).add_block(sizeof(t_block) + 5, 6);
-		t_block_location r{nullptr, sim_area.area(), nullptr, reinterpret_cast<t_block*>(sim_area.area() + 1)};
-		join_free_blocks_around(TINY, &r);
-		bool check = sim_area == std::vector<SimulatedArea::Block>{{5}, {6}};
+		SimulatedArea sim_area(128, false);
+		sim_area.add_block(0, 5).add_block(sizeof(t_block) + 16, 6);
+		t_block_location r{ nullptr, sim_area.area(), nullptr,
+			                reinterpret_cast<t_block *>(sim_area.area() + 1), TINY };
+		join_free_blocks_around(&r);
+		bool check = sim_area == std::vector<SimulatedArea::Block>{{16}, {6}};
 		CPPUNIT_ASSERT(check);
 	}
 
 	void free_block_after() {
-		SimulatedArea sim_area(64);
-		sim_area.add_block(0, 5).add_block(sizeof(t_block) + 5, 6, true);
-		t_block_location r{nullptr, sim_area.area(), nullptr, reinterpret_cast<t_block*>(sim_area.area() + 1)};
-		join_free_blocks_around(TINY, &r);
-		bool check = sim_area == std::vector<SimulatedArea::Block>{{5 + sizeof(t_block) + 6}};
+		SimulatedArea sim_area(128, false);
+		sim_area.add_block(0, 5).add_block(sizeof(t_block) + 16, 16, true);
+		t_block_location r{ nullptr, sim_area.area(), nullptr,
+			                reinterpret_cast<t_block *>(sim_area.area() + 1), TINY };
+		sim_area.simulate_in_true_area(TINY,
+		                               [&r] { join_free_blocks_around(&r); });
+		bool check = sim_area == std::vector<SimulatedArea::Block>{ { 16 * 2 + sizeof(t_block), true } };
 		CPPUNIT_ASSERT(check);
-		CPPUNIT_ASSERT(not sim_area.free_list());
+		unmap_everything(false);
 	}
-/*	
+	
 	void free_block_after2() {
-		auto sim_area = get_simulation_area(128, {{5, true}, {6, true}, {9}});
-		t_area* area = (t_area*)&sim_area[0];
-		t_block_location r{nullptr, area, nullptr, area->blocks};
-		join_free_blocks_around(&r);
-		CPPUNIT_ASSERT(check_sim_area(area, {{5 + sizeof(t_block) + 6, true}, {9}}));
+		SimulatedArea sim_area(128, false);
+		sim_area.add_block(0, 5).add_block(sizeof(t_block) + 16, 16, true).add_block((sizeof(t_block) + 16) * 2, 9);
+		t_block_location r{ nullptr, sim_area.area(), nullptr,
+			                reinterpret_cast<t_block *>(sim_area.area() + 1), TINY };
+		sim_area.simulate_in_true_area(TINY,
+		                               [&r] { join_free_blocks_around(&r); });
+		bool check = sim_area == std::vector<SimulatedArea::Block>{ { sizeof(t_block) + 16 * 2, true }, {9}};
+		CPPUNIT_ASSERT(check);
+		unmap_everything(false);
 	}
 	
 	void free_block_before() {
-		auto sim_area = get_simulation_area(128, {{5, true}, {6}, {1}});
-		t_area* area = (t_area*)&sim_area[0];
-		t_block_location r{nullptr, area, area->blocks, area->blocks->next};
-		join_free_blocks_around(&r);
-		CPPUNIT_ASSERT(check_sim_area(area, {{5 + sizeof(t_block) + 6, true}, {1}}));
+		SimulatedArea sim_area(128, false);
+		sim_area.add_block(0, 16, true).add_block(sizeof(t_block) + 16, 6).add_block((sizeof(t_block) + 16) * 2, 9);
+		t_block_location r{ nullptr, sim_area.area(),
+			                reinterpret_cast<t_block *>(sim_area.area() + 1),
+			                reinterpret_cast<t_block *>(sim_area.area() + 3), TINY };
+		sim_area.simulate_in_true_area(TINY,
+		                               [&r] { join_free_blocks_around(&r); });
+		bool check = sim_area == std::vector<SimulatedArea::Block>{ { 16 * 2 + sizeof(t_block), true }, {9}};
+		CPPUNIT_ASSERT(check);
+		unmap_everything(false);
 	}
-
+	
+	void free_block_around() {
+		SimulatedArea sim_area(128, false);
+		sim_area.add_block(0, 16, true).add_block(sizeof(t_block) + 16, 6).add_block((sizeof(t_block) + 16) * 2, 16, true);
+		t_block_location r{ nullptr, sim_area.area(),
+			                reinterpret_cast<t_block *>(sim_area.area() + 1),
+			                reinterpret_cast<t_block *>(sim_area.area() + 3), TINY };
+		sim_area.simulate_in_true_area(TINY,
+		                               [&r] { join_free_blocks_around(&r); });
+		bool check = sim_area == std::vector<SimulatedArea::Block>{ { (16 + sizeof(t_block)) * 2 + 16, true }};
+		CPPUNIT_ASSERT(check);
+		unmap_everything(false);
+	}
+/*	
 	void free_block_around() {
 		auto sim_area = get_simulation_area(256, {{5, true}, {6}});
 		t_area* area = (t_area*)&sim_area[0];

@@ -3,28 +3,28 @@
 
 #include "libft/output/obuff.h"
 
+#include <stdio.h>
 t_area_and_type	get_lowest_area(t_area** tiny, t_area** small, t_area** large)
 {
 	t_area_and_type ret;
+	t_area			**area;
 
-	ret.area = *tiny;
-	if (*small && (*small < ret.area || !ret.area))
+	area = tiny;
+	ret.type = TINY;
+	//printf("s=%p, l=%p, t=%p\n", *small, *large, *tiny);
+	if (*small && (*small < *area || !*area))
 	{
-		ret.area = *small;
+		area = small;
 		ret.type = SMALL;
-		*small = (*small)->next;
 	}
-	if (*large && (*large < ret.area || !ret.area))
+	if (*large && (*large < *area || !*area))
 	{
-		ret.area = *large;
+		area = large;
 		ret.type = LARGE;
-		*large = (*large)->next;
 	}
-	if (ret.area && ret.area == *tiny)
-	{
-		*tiny = (*tiny)->next;
-		ret.type = TINY;
-	}
+	ret.area = *area;
+	if (*area)
+		*area = (*area)->next;
 	return (ret);
 }
 

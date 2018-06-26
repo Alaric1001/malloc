@@ -24,5 +24,6 @@ size_t			round_size(t_block_type type, size_t size);
 t_area_and_type	get_lowest_area(t_area** tiny, t_area** small, t_area** large);
 const char* 	get_type_str(t_block_type type);
 int				is_in_free_list(const t_block* b, const t_block* free_list);
+t_block*		search_free_block(t_block_type type, const t_block* ref);
 
 #endif

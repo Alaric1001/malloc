@@ -33,10 +33,13 @@ inline void unmap_everything(bool unmap_for_real = true) {
 	};
 	unmap(&g_areas[0].area);
 	g_areas[0].total_size = 0;
+	g_areas[0].free_blocks = nullptr;
 	unmap(&g_areas[1].area);
 	g_areas[1].total_size = 0;
+	g_areas[1].free_blocks = nullptr;
 	unmap(&g_areas[2].area);
 	g_areas[2].total_size = 0;
+	g_areas[2].free_blocks = nullptr;
 }
 
 class SimulatedArea {
@@ -108,16 +111,22 @@ public:
 		g_areas[type].free_blocks = free_list();
 	}
 
+	void simulate_in_true_area(t_block_type type, std::function<void(void)> f) {
+		set_in_g_areas(type);
+		f();
+		m_free_list = g_areas[type].free_blocks;
+	}
+
 	bool operator==(const std::vector<Block>& rhs) const {
 		bool ret = true;
 		std::size_t i = 0;
 		SimulatedArea::iter_area(*this, [&](const t_block *block) {
-			if (i > rhs.size())
+			if (i >= rhs.size())
 				return ret;
 			const auto& ref = rhs[i++];
-			if (block->size == ref.size and ref.free != is_in_free_list(block, this->m_free_list))
+			if (block->size == ref.size and ref.free == is_in_free_list(block, this->m_free_list))
 				return true;
-			std::cerr << "[err] s=" << block->size
+			std::cerr << "[err] index=" << i - 1 << ", s=" << block->size
 			          << ", f=" << is_in_free_list(block, this->m_free_list) << "\n";
 			return ret = false;
 		});

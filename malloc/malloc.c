@@ -28,7 +28,6 @@ void	*malloc(size_t size)
 	if (!size)
 		return (NULL);
 	type = get_block_type(size);
-	printf("block_type: %d\n", type);
 	ret = do_malloc(type, size);
 	if (!ret)
 		return (NULL);

@@ -34,20 +34,21 @@ typedef struct		s_area_contrainer
 	t_area	*area;
 }					t_area_container;
 
-typedef struct		s_block_location
-{
-	t_area*		prev_area;
-	t_area*		loc_area;
-	t_block*	prev_free;
-	t_block*	loc;
-}					t_block_location;
-
 typedef enum		e_block_type
 {
 	TINY,
 	SMALL,
 	LARGE
 }					t_block_type;
+
+typedef struct		s_block_location
+{
+	t_area*			prev_area;
+	t_area*			loc_area;
+	t_block*		prev_free;
+	t_block*		loc;
+	t_block_type 	type;
+}					t_block_location;
 
 typedef struct		s_area_and_type {
 	const t_area*	area;

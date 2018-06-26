@@ -38,16 +38,13 @@ class SearchInAreaTest : public CppUnit::TestCase
 
 	void test_not_found() {
 		t_block_location r{nullptr, nullptr, nullptr, nullptr};
-		CPPUNIT_ASSERT(!search_in_area(TINY, 0, &r));
 		SimulatedArea sim_a(256, false);
 		sim_a.add_block(0, 16, true).add_block(16 + sizeof(t_block), 32);
 		t_area* area = sim_a.area();
 		sim_a.set_in_g_areas(TINY);
-		auto found = search_in_area(TINY, reinterpret_cast<char*>(0xbeef), &r);
+		auto found = search_in_area(area, reinterpret_cast<char*>(0xbeef), &r);
 		CPPUNIT_ASSERT(!found);
-		found = search_in_area(TINY, reinterpret_cast<char*>(area + 1) + 1 , &r);
-		CPPUNIT_ASSERT(!found);
-		found = search_in_area(TINY, reinterpret_cast<char*>(area + 1) + sizeof(t_block) , &r);
+		found = search_in_area(area, reinterpret_cast<char*>(area + 1) + 1 , &r);
 		CPPUNIT_ASSERT(!found);
 		unmap_everything(false);
 	}
@@ -58,7 +55,7 @@ class SearchInAreaTest : public CppUnit::TestCase
 		sim_a.add_block(0, 16).add_block(16 + sizeof(t_block), 32);
 		t_area* area = sim_a.area();
 		sim_a.set_in_g_areas(TINY);
-		auto found = search_in_area(TINY, ((char*)(area + 1) + sizeof(t_block)), &r);
+		auto found = search_in_area(area, ((char*)(area + 1) + sizeof(t_block)), &r);
 		CPPUNIT_ASSERT(found);
 		CPPUNIT_ASSERT(!r.prev_area);
 		CPPUNIT_ASSERT_EQUAL(area, r.loc_area);
@@ -74,11 +71,11 @@ class SearchInAreaTest : public CppUnit::TestCase
 		t_area* area = sim_a.area();
 		sim_a.set_in_g_areas(TINY);
 		char *first_block = reinterpret_cast<char *>(area + 1);
-		auto found = search_in_area(TINY, first_block + sizeof(t_block) * 2 + 16, &r);
+		auto found = search_in_area(area, first_block + sizeof(t_block) * 2 + 16, &r);
 		CPPUNIT_ASSERT(found);
 		CPPUNIT_ASSERT(!r.prev_area);
 		CPPUNIT_ASSERT_EQUAL(area, r.loc_area);
-		CPPUNIT_ASSERT_EQUAL(reinterpret_cast<t_block *>(first_block), r.prev_free);
+		CPPUNIT_ASSERT(!r.prev_free);
 		CPPUNIT_ASSERT_EQUAL(reinterpret_cast<t_block *>(first_block + sizeof(t_block) + 16), r.loc);
 		unmap_everything(false);
 	}
@@ -90,7 +87,7 @@ class SearchInAreaTest : public CppUnit::TestCase
 		t_area* area = sim_a.area();
 		sim_a.set_in_g_areas(TINY);
 		char *first_block = reinterpret_cast<char *>(area + 1);
-		auto found = search_in_area(TINY, first_block + sizeof(t_block) * 2 + 16, &r);
+		auto found = search_in_area(area, first_block + sizeof(t_block) * 2 + 16, &r);
 		CPPUNIT_ASSERT(found);
 		CPPUNIT_ASSERT(!r.prev_area);
 		CPPUNIT_ASSERT_EQUAL(area, r.loc_area);
@@ -108,7 +105,7 @@ class SearchInAreaTest : public CppUnit::TestCase
 		sim_a.chain(sim_a2);
 		sim_a.set_in_g_areas(TINY);
 		char *first_block = reinterpret_cast<char *>(sim_a2.area() + 1);
-		auto found = search_in_area(TINY, first_block + sizeof(t_block) * 2 + 64, &r);
+		auto found = search_in_area(sim_a.area(), first_block + sizeof(t_block) * 2 + 64, &r);
 		CPPUNIT_ASSERT(found);
 		CPPUNIT_ASSERT_EQUAL(sim_a.area(), r.prev_area);
 		CPPUNIT_ASSERT_EQUAL(sim_a2.area(), r.loc_area);
