@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 18:00:01 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/19 18:23:47 by asenat           ###   ########.fr       */
+/*   Updated: 2018/06/27 23:54:18 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,9 @@ static void		join_prev(t_block_location *location)
 {
 	t_block	*current;
 	t_block	*prev_free;
-	t_block *next;
 
 	current = location->loc;
 	prev_free = location->prev_free;
-	next = (t_block*)((char*)current + round_size(location->type, current->size));
 	if (prev_free && (char*)current - (char*)prev_free == (long)prev_free->size)
 	{
 		prev_free->size = current->size + prev_free->size;

@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 13:19:51 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/27 14:19:16 by asenat           ###   ########.fr       */
+/*   Updated: 2018/06/27 23:53:49 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include "utils/utils.h"
 #include "libft/output/output.h"
 #include "libft/memory/memory.h"
+
+#include <stdio.h>
 
 static void error_and_abort(void)
 {
