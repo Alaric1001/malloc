@@ -26,7 +26,7 @@ public:
 			auto* block = add_new_block(&loc, 42);
 		}
 		t_block* block = reinterpret_cast<t_block*>(&loc[0]);
-		CPPUNIT_ASSERT_EQUAL(42ul - sizeof(t_block), block->size);
+		CPPUNIT_ASSERT_EQUAL(42ul, block->size);
 		CPPUNIT_ASSERT(!block->next_free);
 	}
 };
@@ -67,9 +67,9 @@ private:
 		CPPUNIT_ASSERT(block);
 		CPPUNIT_ASSERT(not block->next_free);
 		if (type == LARGE)
-			CPPUNIT_ASSERT_EQUAL(size, block->size);
+			CPPUNIT_ASSERT_EQUAL(size + sizeof(t_block), block->size);
 		else
-			CPPUNIT_ASSERT_EQUAL(get_area_size(type) - sizeof(t_area) - sizeof(t_block), block->size);
+			CPPUNIT_ASSERT_EQUAL(get_area_size(type) - sizeof(t_area), block->size);
 		unmap_everything();
 	}
 

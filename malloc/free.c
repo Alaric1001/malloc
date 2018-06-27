@@ -60,7 +60,7 @@ void	free(void *ptr)
 		join_free_blocks_around(&locations);
 		first_area_block = (t_block*)(locations.loc_area + 1);
 		if (first_area_block->size == locations.loc_area->size
-				- sizeof(t_block) - sizeof(t_area)) {
+				- sizeof(t_area)) {
 			printf("unmap area\n");
 			unmap_area(locations.type, &locations);
 		}

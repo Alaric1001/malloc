@@ -19,11 +19,15 @@ extern "C" {
 
 int main(void)
 {
+	malloc(28);
+	malloc(102);
+	malloc(64);
 	std::vector<void*> adresses;
 	adresses.reserve(10);
-	for (auto i = 0 ; i < 10; ++i)
-		adresses.push_back(malloc(42));
+	for (auto i = 0 ; i < 50; ++i)
+		adresses.push_back(malloc(100));
 	write(1, "---------\n", 10);
+	show_alloc_mem();
 	for (auto* adr : adresses)
 		free(adr);
 	write(1, "---------\n", 10);

@@ -56,7 +56,7 @@ public:
 			reinterpret_cast<const char *>(area) + cursor);
 			if (not action(block))
 				return false;
-			cursor += round_size(sim_area.type(), block->size) + sizeof(t_block);
+			cursor += round_size(sim_area.type(), block->size);
 		}
 		return true;
 	}
@@ -79,7 +79,7 @@ public:
 
 	SimulatedArea& add_block(std::size_t location, std::size_t size, bool free = false) {
 		location += sizeof(t_area);
-		assert(location + sizeof(t_block) + size <= m_mem.size());
+		assert(location + size <= m_mem.size());
 		t_block* block = reinterpret_cast<t_block*>(&m_mem[location]);
 		block->size = size;
 		block->next_free = nullptr;
@@ -122,7 +122,7 @@ public:
 		std::size_t i = 0;
 		SimulatedArea::iter_area(*this, [&](const t_block *block) {
 			if (i >= rhs.size())
-				return ret;
+				return false;
 			const auto& ref = rhs[i++];
 			if (block->size == ref.size and ref.free == is_in_free_list(block, this->m_free_list))
 				return true;

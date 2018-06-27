@@ -43,10 +43,12 @@ static void display_blocks(const t_area_and_type *val, size_t *total_size, t_obu
 			ft_add_str_to_obuff(" octet", obuff);
 			if (iterator->size > 1 && iterator->size)
 				ft_add_char_to_obuff('s', obuff);
+			if (is_in_free_list(iterator, g_areas[val->type].free_blocks))
+				ft_add_str_to_obuff(" -> free", obuff);
 			ft_add_char_to_obuff('\n', obuff);
 			(*total_size) += iterator->size;
 		}
-		cursor += round_size(val->type, iterator->size) + sizeof(t_block);
+		cursor += round_size(val->type, iterator->size);
 	}
 }
 

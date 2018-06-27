@@ -38,8 +38,7 @@ class SearchInAreaTest : public CppUnit::TestCase
 
 	void test_not_found() {
 		t_block_location r{nullptr, nullptr, nullptr, nullptr};
-		SimulatedArea sim_a(256, false);
-		sim_a.add_block(0, 16, true).add_block(16 + sizeof(t_block), 32);
+		SimulatedArea sim_a(256);
 		t_area* area = sim_a.area();
 		sim_a.set_in_g_areas(TINY);
 		auto found = search_in_area(area, reinterpret_cast<char*>(0xbeef), &r);
@@ -51,8 +50,8 @@ class SearchInAreaTest : public CppUnit::TestCase
 
 	void match_in_first_place() {
 		t_block_location r{nullptr, nullptr, nullptr, nullptr};
-		SimulatedArea sim_a(256, false);
-		sim_a.add_block(0, 16).add_block(16 + sizeof(t_block), 32);
+		SimulatedArea sim_a(90, false);
+		sim_a.add_block(0, 16 + sizeof(t_block)).add_block(16 + sizeof(t_block), 32);
 		t_area* area = sim_a.area();
 		sim_a.set_in_g_areas(TINY);
 		auto found = search_in_area(area, ((char*)(area + 1) + sizeof(t_block)), &r);
@@ -66,8 +65,8 @@ class SearchInAreaTest : public CppUnit::TestCase
 
 	void match_in_second_place_free_before() {
 		t_block_location r{nullptr, nullptr, nullptr, nullptr};
-		SimulatedArea sim_a(256, false);
-		sim_a.add_block(0, 16, true).add_block(16 + sizeof(t_block), 32);
+		SimulatedArea sim_a(90, false);
+		sim_a.add_block(0, 16 + sizeof(t_block), true).add_block(16 + sizeof(t_block), 32);
 		t_area* area = sim_a.area();
 		sim_a.set_in_g_areas(TINY);
 		char *first_block = reinterpret_cast<char *>(area + 1);
@@ -82,8 +81,8 @@ class SearchInAreaTest : public CppUnit::TestCase
 
 	void match_in_second_place_alloc_before() {
 		t_block_location r{nullptr, nullptr, nullptr, nullptr};
-		SimulatedArea sim_a(256, false);
-		sim_a.add_block(0, 16).add_block(16 + sizeof(t_block), 32);
+		SimulatedArea sim_a(90, false);
+		sim_a.add_block(0, 16 + sizeof(t_block)).add_block(16 + sizeof(t_block), 32);
 		t_area* area = sim_a.area();
 		sim_a.set_in_g_areas(TINY);
 		char *first_block = reinterpret_cast<char *>(area + 1);
@@ -98,19 +97,19 @@ class SearchInAreaTest : public CppUnit::TestCase
 
 	void match_in_second_area() {
 		t_block_location r{nullptr, nullptr, nullptr, nullptr};
-		SimulatedArea sim_a(256, false);
-		sim_a.add_block(0, 16, true).add_block(16 + sizeof(t_block), 32);
-		SimulatedArea sim_a2(256, false);
-		sim_a2.add_block(0, 64).add_block(64 + sizeof(t_block), 16);
+		SimulatedArea sim_a(90, false);
+		sim_a.add_block(0, 16 + sizeof(t_block), true).add_block(16 + sizeof(t_block), 32);
+		SimulatedArea sim_a2(90, false);
+		sim_a2.add_block(0, 16 + sizeof(t_block)).add_block(16 + sizeof(t_block), 32);
 		sim_a.chain(sim_a2);
 		sim_a.set_in_g_areas(TINY);
 		char *first_block = reinterpret_cast<char *>(sim_a2.area() + 1);
-		auto found = search_in_area(sim_a.area(), first_block + sizeof(t_block) * 2 + 64, &r);
+		auto found = search_in_area(sim_a.area(), first_block + sizeof(t_block) * 2 + 16, &r);
 		CPPUNIT_ASSERT(found);
 		CPPUNIT_ASSERT_EQUAL(sim_a.area(), r.prev_area);
 		CPPUNIT_ASSERT_EQUAL(sim_a2.area(), r.loc_area);
 		CPPUNIT_ASSERT(!r.prev_free);
-		CPPUNIT_ASSERT_EQUAL(reinterpret_cast<t_block *>(first_block + sizeof(t_block) + 64), r.loc);
+		CPPUNIT_ASSERT_EQUAL(reinterpret_cast<t_block *>(first_block + sizeof(t_block) + 16), r.loc);
 		unmap_everything(false);
 	}
 

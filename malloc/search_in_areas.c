@@ -28,7 +28,7 @@ static int search_addr(const t_area *area,
 			result->loc = iterator;
 			return (1);
 		}
-		cursor += round_size(result->type, iterator->size) + sizeof(t_block);
+		cursor += round_size(result->type, iterator->size);
 	}
 	return (0);
 }

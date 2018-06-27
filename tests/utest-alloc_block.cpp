@@ -23,11 +23,6 @@ public:
 	CPPUNIT_TEST(two_blocks_second_allocated);
 	CPPUNIT_TEST(two_blocks_first_allocated);
 	CPPUNIT_TEST(chained_areas);
-//	CPPUNIT_TEST(two_different_size);
-//	CPPUNIT_TEST(three_different_size);
-//	CPPUNIT_TEST(not_enough_space);
-//	CPPUNIT_TEST(just_enough_space);
-//	CPPUNIT_TEST(free_block_before);
 	CPPUNIT_TEST_SUITE_END();
 
 	void too_small() {
@@ -45,7 +40,7 @@ public:
 		reinterpret_cast<t_block *>(reinterpret_cast<char*>(first + 1) + 16);
 		CPPUNIT_ASSERT(second);
 		CPPUNIT_ASSERT(!first->next_free);
-		CPPUNIT_ASSERT_EQUAL(12ul, first->size);
+		CPPUNIT_ASSERT_EQUAL(12ul + sizeof(t_block), first->size);
 		CPPUNIT_ASSERT_EQUAL(real_mem_size - sizeof(t_block) - 16, second->size);
 		CPPUNIT_ASSERT_EQUAL(16ul + sizeof(t_block),
 							static_cast<std::size_t>((char *)second - (char *)first));
@@ -54,34 +49,34 @@ public:
 
 	void two_blocks_second_allocated() {
 		SimulatedArea sarea(128, false);
-		sarea.add_block(0, 2, true).add_block(sizeof(t_block) + 2, 16, true);
+		sarea.add_block(0, 2, true).add_block(sizeof(t_block) + 2, 16 + sizeof(t_block), true);
 		auto* nxt = sarea.free_list()->next_free;
 		t_block* block = alloc_block(TINY, &nxt, sarea.free_list(), 16);
 		CPPUNIT_ASSERT(block);
-		CPPUNIT_ASSERT_EQUAL(16ul, block->size);
+		CPPUNIT_ASSERT_EQUAL(16ul + sizeof(t_block), block->size);
 		CPPUNIT_ASSERT(not sarea.free_list()->next_free);
 	}
 
 	void two_blocks_first_allocated() {
 		SimulatedArea sarea(128, false);
-		sarea.add_block(0, 16, true).add_block(sizeof(t_block) + 2, 16, true);
+		sarea.add_block(0, 16 + sizeof(t_block), true).add_block(sizeof(t_block) * 2, 16, true);
 		auto* old_first_elem = sarea.free_list()->next_free;
 		t_block* block = alloc_block(TINY, sarea.d_free_list(), nullptr, 2);
 		CPPUNIT_ASSERT(block);
-		CPPUNIT_ASSERT_EQUAL(2ul, block->size);
+		CPPUNIT_ASSERT_EQUAL(2 + sizeof(t_block), block->size);
 		CPPUNIT_ASSERT_EQUAL(old_first_elem, sarea.free_list());
 		CPPUNIT_ASSERT(not sarea.free_list()->next_free);
 	}
 
 	void chained_areas() {
-		SimulatedArea sarea(16 * 2 + sizeof(t_block) * 2 + sizeof(t_area), false);
+		SimulatedArea sarea(128, false);
 		SimulatedArea sarea2(64);
-		sarea.add_block(0, 2, true).add_block(sizeof(t_block) + 2, 16, true);
+		sarea.add_block(0, 2, true).add_block(sizeof(t_block) + 2, 16 + sizeof(t_block), true);
 		sarea.chain(sarea2);
 		auto* nxt = sarea.free_list()->next_free;
-		t_block* block = alloc_block(TINY, &nxt, sarea.free_list(), 16);
+		t_block* block = alloc_block(TINY, &nxt, sarea.free_list(), 12);
 		CPPUNIT_ASSERT(block);
-		CPPUNIT_ASSERT_EQUAL(16ul, block->size);
+		CPPUNIT_ASSERT_EQUAL(12 + sizeof(t_block), block->size);
 		CPPUNIT_ASSERT_EQUAL(sarea2.free_list(), sarea.free_list()->next_free);
 	}
 };

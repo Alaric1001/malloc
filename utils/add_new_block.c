@@ -17,7 +17,7 @@ t_block		*add_new_block(void* location, size_t size)
 	t_block *block;
 
 	block = (t_block*)location;
-	block->size = size - sizeof(t_block);
+	block->size = size;
 	block->next_free = NULL;
 	return (block);
 }

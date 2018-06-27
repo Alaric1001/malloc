@@ -23,17 +23,17 @@ t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t s
 	size_t	rounded_size;
 
 	ret = *it;
-	rounded_size = round_size(type, size);
+	rounded_size = round_size(type, size + sizeof(t_block));
 	if (ret->size < rounded_size)
 		return NULL;
-	if (ret->size > rounded_size + sizeof(t_block))
+	if (ret->size > rounded_size + round_size(type, sizeof(t_block) + 1))
 	{
-		next = (t_block*)((char*)(ret + 1) + rounded_size);
-		next->size = ret->size - (rounded_size + sizeof(t_block));
+		next = (t_block*)((char*)ret + rounded_size);
+		next->size = ret->size - rounded_size;
 		next->next_free = ret->next_free;
 		ret->next_free = next;
 	}
-	ret->size = size;
+	ret->size = size + sizeof(t_block);
 	if (!last_it)
 		*it = ret->next_free;
 	else
