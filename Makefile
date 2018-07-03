@@ -6,7 +6,7 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/07 17:26:46 by asenat            #+#    #+#              #
-#    Updated: 2018/06/15 09:56:10 by asenat           ###   ########.fr        #
+#    Updated: 2018/07/01 16:47:34 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ endif
 
 ## Libft
 LIBFT		:= libft/libft.a
+LIBFT_FLAGS	:= -L./libft -Wl,--whole-archive -lft -Wl,--no-whole-archive
 MAKELIBFT	:= make -C libft
 #
 
@@ -38,7 +39,7 @@ COMP		:= $(CC) $(CFLAGS) -c -o
 ## Sources directories
 #
 TEST_DIRS	:= tests
-SRC_DIRS	:= malloc utils
+SRC_DIRS	:= ft_malloc utils malloc
 #
 
 ## Colors
@@ -60,13 +61,13 @@ include $(patsubst %, %/Sources.mk, $(SRC_DIRS))
 
 OBJ_DIRS	:= $(patsubst %, %/obj, $(SRC_DIRS))
 
-$(NAME): $(LIBFT) $(OBJ_DIRS) $(OBJECTS)
-	$(CC) $(LFLAGS) -o $(NAME) $(LIBFT) $(OBJECTS)
-	@echo $(PNAME)$(GREEN) "linking complete"$(RESET)
+$(NAME): $(LIBFT) $(OBJ_DIRS) $(OBJECTS) $(IMPL_OBJS)
+	$(CC) $(LFLAGS) $(LIBFT_FLAGS) -o $(NAME) $(OBJECTS) $(IMPL_OBJS)
+	@echo -e $(PNAME)$(GREEN) "linking complete"$(RESET)
 
 $(SHORT_NAME):
 	ln -fs $(NAME) $(SHORT_NAME)
-	@echo $(SHORT_NAME)$(GREEN) "->" $(PNAME)$(GREEN) "generated"$(RESET)
+	@echo -e $(SHORT_NAME)$(GREEN) "->" $(PNAME)$(GREEN) "generated"$(RESET)
 
 ## Including compilation rules
 #

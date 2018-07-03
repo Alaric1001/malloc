@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free.c                                             :+:      :+:    :+:   */
+/*   ft_free.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 13:19:51 by asenat            #+#    #+#             */
-/*   Updated: 2018/06/27 23:53:49 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/04 00:09:23 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc/malloc.h"
+#include "ft_malloc/ft_malloc.h"
 
-#include "malloc/algorithm.h"
+#include "ft_malloc/algorithm.h"
 #include "utils/utils.h"
 #include "libft/output/output.h"
 #include "libft/memory/memory.h"
@@ -21,7 +21,7 @@
 
 static void error_and_abort(void)
 {
-		ft_putstr_fd("free(): Invalid pointer", 2);
+		ft_putstr_fd("free(): Invalid pointer\n", 2);
 		exit(6);
 }
 
@@ -47,10 +47,9 @@ static int search_and_handle_errors(const void *ptr, t_block_location* ret)
 	return (!ptr_found);
 }
 
-void	free(void *ptr)
+void	ft_free(void *ptr)
 {
 	t_block_location	locations;
-	t_block				*first_area_block;
 
 	if (!ptr)
 		return ;
@@ -60,13 +59,13 @@ void	free(void *ptr)
 	if(locations.type != LARGE)
 	{
 		join_free_blocks_around(&locations);
-		first_area_block = (t_block*)(locations.loc_area + 1);
-		if (first_area_block->size == locations.loc_area->size
+		if (locations.loc->size >= locations.loc_area->size
 				- sizeof(t_area)) {
 			printf("unmap area\n");
-			unmap_area(locations.type, &locations);
+			remove_from_free_lst(locations.type, locations.loc);
+			unmap_area(&locations);
 		}
-		return ;
 	}
-	unmap_area(locations.type, &locations);
+	else
+		unmap_area(&locations);
 }

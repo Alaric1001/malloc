@@ -6,13 +6,15 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 18:00:01 by asenat            #+#    #+#             */
-/*   Updated: 2018/06/27 23:54:18 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/03 13:53:11 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc/algorithm.h"
+#include "ft_malloc/algorithm.h"
 
 #include "utils/utils.h"
+
+#include <stdio.h>
 
 static void		join_prev(t_block_location *location)
 {
@@ -26,7 +28,7 @@ static void		join_prev(t_block_location *location)
 		prev_free->size = current->size + prev_free->size;
 		location->loc = prev_free;
 	}
-	if (prev_free)
+	else if (prev_free)
 	{
 		current->next_free = prev_free->next_free;
 		prev_free->next_free = current;

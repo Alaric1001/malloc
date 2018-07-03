@@ -6,12 +6,14 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 17:01:37 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/21 16:42:05 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/02 00:42:09 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc/algorithm.h"
+#include "ft_malloc/algorithm.h"
+
 #include "utils/utils.h"
+#include "libft/memory/memory.h"
 
 static int search_addr(const t_area *area,
 		const char *adr, t_block_location *result)
@@ -46,6 +48,7 @@ int			search_in_area(t_area *area,
 		result->prev_area = area;
 		area = area->next;
 	}
+	ft_bzero(result, sizeof(t_block_location));
 	return (0);
 }
 

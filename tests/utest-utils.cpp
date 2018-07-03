@@ -5,7 +5,7 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 extern "C" {
-#include "malloc/malloc_data.h"
+#include "ft_malloc/malloc_data.h"
 #include "utils/utils.h"
 #include <sys/resource.h>
 #include <unistd.h>
@@ -123,54 +123,7 @@ public:
 				});
 	}
 };
-/*
-class UnmapAreaTest : public CppUnit::TestCase {
-public:
-	CPPUNIT_TEST_SUITE(UnmapAreaTest);
-	CPPUNIT_TEST(remove_first);
-	CPPUNIT_TEST(remove_second_nothing_after);
-	CPPUNIT_TEST(remove_second_something_after);
-	CPPUNIT_TEST_SUITE_END();
-	void remove_first() {
-		auto area_sim1 = get_simulation_area(64, {});
-		auto area_sim2 = get_simulation_area(72, {});
-		auto areas = chain_areas(TINY, {&area_sim1, &area_sim2});
 
-		t_block_location l{nullptr, areas[0], nullptr, nullptr};
-		unmap_area(TINY, &l);
-		CPPUNIT_ASSERT_EQUAL(areas[1], g_areas[TINY].area);
-		CPPUNIT_ASSERT_EQUAL(areas[1]->size, g_areas[TINY].total_size);
-		unmap_everything();
-	}
-
-	void remove_second_nothing_after() {
-		auto area_sim1 = get_simulation_area(64, {});
-		auto area_sim2 = get_simulation_area(72, {});
-		auto areas = chain_areas(TINY, {&area_sim1, &area_sim2});
-
-		t_block_location l{areas[0], areas[1], nullptr, nullptr};
-		unmap_area(TINY, &l);
-		CPPUNIT_ASSERT_EQUAL(areas[0], g_areas[TINY].area);
-		CPPUNIT_ASSERT(!areas[0]->next);
-		CPPUNIT_ASSERT_EQUAL(areas[0]->size, g_areas[TINY].total_size);
-		unmap_everything();
-	}
-
-	void remove_second_something_after() {
-		auto area_sim1 = get_simulation_area(56, {});
-		auto area_sim2 = get_simulation_area(124, {});
-		auto area_sim3 = get_simulation_area(64, {});
-		auto areas = chain_areas(TINY, {&area_sim1, &area_sim2, &area_sim3});
-
-		t_block_location l{areas[0], areas[1], nullptr, nullptr};
-		unmap_area(TINY, &l);
-		CPPUNIT_ASSERT_EQUAL(areas[0], g_areas[TINY].area);
-		CPPUNIT_ASSERT_EQUAL(areas[0]->next, areas[2]);
-		CPPUNIT_ASSERT_EQUAL(areas[0]->size + areas[2]->size, g_areas[TINY].total_size);
-		unmap_everything();
-	}
-};
-*/
 CPPUNIT_TEST_SUITE_REGISTRATION(AddBlockTest);
 CPPUNIT_TEST_SUITE_REGISTRATION(MmapAreaTest);
 CPPUNIT_TEST_SUITE_REGISTRATION(RoundTestSize);

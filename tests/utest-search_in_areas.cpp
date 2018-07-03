@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 12:39:03 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/21 17:16:51 by asenat           ###   ########.fr       */
+/*   Updated: 2018/06/30 01:10:09 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 #include <cppunit/extensions/HelperMacros.h>
 
 extern "C" {
-#include "malloc/malloc_data.h"
-#include "malloc/algorithm.h"
+#include "ft_malloc/malloc_data.h"
+#include "ft_malloc/algorithm.h"
 #include <string.h>
 }
 

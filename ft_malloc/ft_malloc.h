@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   malloc.h                                           :+:      :+:    :+:   */
+/*   ft_malloc.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
+/*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/06/30 00:29:10 by asenat            #+#    #+#             */
-/*   Updated: 2018/06/30 00:31:50 by asenat           ###   ########.fr       */
+/*   Created: 2018/05/09 16:06:57 by asenat            #+#    #+#             */
+/*   Updated: 2018/06/30 01:02:05 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MALLOC_H
-# define MALLOC_H
+#ifndef FT_MALLOC_H
+# define FT_MALLOC_H
 
 #include <stdlib.h>
 
-void *malloc(size_t size);
-void free(void *ptr);
-void *realloc(void *ptr, size_t size);
+void	ft_free(void *ptr);
+void	*ft_malloc(size_t size);
+void	*ft_realloc(void *ptr, size_t size);
 
-void show_alloc_mem(void);
-
+void	ft_show_alloc_mem(void);
 #endif

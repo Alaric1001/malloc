@@ -7,8 +7,8 @@
 #include "tests/utils.hpp"
 
 extern "C" {
-#include "malloc/malloc_data.h"
-#include "malloc/algorithm.h"
+#include "ft_malloc/malloc_data.h"
+#include "ft_malloc/algorithm.h"
 #include <string.h>
 }
 #include <memory>

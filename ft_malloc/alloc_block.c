@@ -6,15 +6,17 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 14:58:59 by asenat            #+#    #+#             */
-/*   Updated: 2018/06/14 23:18:16 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/03 17:29:43 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc/algorithm.h"
+#include "ft_malloc/algorithm.h"
 
 #include "utils/utils.h"
 #include "libft/output/output.h"
 #include <stdio.h>
+
+size_t ma_supa_size = 0;
 
 t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t size)
 {
@@ -23,10 +25,10 @@ t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t s
 	size_t	rounded_size;
 
 	ret = *it;
-	rounded_size = round_size(type, size + sizeof(t_block));
-	if (ret->size < rounded_size)
+	if (ret->size < size + sizeof(t_block))
 		return NULL;
-	if (ret->size > rounded_size + round_size(type, sizeof(t_block) + 1))
+	rounded_size = round_size(type, size + sizeof(t_block));
+	if (ret->size > rounded_size + sizeof(t_block) + 1)
 	{
 		next = (t_block*)((char*)ret + rounded_size);
 		next->size = ret->size - rounded_size;
@@ -48,7 +50,7 @@ t_block		*do_malloc(t_block_type type, size_t size)
 	t_block *last_free;
 	t_block **current_free;
 	t_block	*tmp;
-
+	ma_supa_size = size;
 	last_free = NULL;
 	current_free = &g_areas[type].free_blocks;
 	while (*current_free)

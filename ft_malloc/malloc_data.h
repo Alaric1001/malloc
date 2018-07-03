@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 11:16:23 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/26 18:44:30 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/03 17:31:06 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,5 +70,5 @@ typedef struct		s_area_and_type {
  */
 
 extern t_area_container		g_areas[3];
-
+extern size_t ma_supa_size;
 #endif

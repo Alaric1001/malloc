@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   malloc.c                                           :+:      :+:    :+:   */
+/*   ft_malloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 10:45:34 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/25 18:17:09 by asenat           ###   ########.fr       */
+/*   Updated: 2018/06/30 00:37:41 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "malloc/malloc.h"
+#include "ft_malloc/ft_malloc.h"
 
-#include "malloc/algorithm.h"
+#include "ft_malloc/algorithm.h"
 #include "utils/utils.h"
 #include <stdio.h>
 
@@ -20,7 +20,7 @@ t_area_container	g_areas[3] = 	{{0, NULL, NULL},
 									{0, NULL, NULL},
 									{0, NULL, NULL}};
 
-void	*malloc(size_t size)
+void	*ft_malloc(size_t size)
 {
 	t_block_type	type;
 	t_block*		ret;
