@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 18:00:01 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/03 13:53:11 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/04 18:14:43 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static void		join_prev(t_block_location *location)
 	}
 }
 
-void			join_free_blocks_around(t_block_location *location)
+void			defrag_around_and_free(t_block_location *location)
 {
 	t_block	*current;
 	t_block	*prev_free;

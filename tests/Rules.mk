@@ -7,7 +7,7 @@ CURR_DIR		:= tests
 TEST_FILES		:= 	utest-utils.cpp \
 					utest-alloc_block.cpp \
 					utest-search_in_areas.cpp \
-					utest-join_free_block_around.cpp \
+					utest-defrag_around_and_free.cpp \
 					manual-tests.cpp
 TEST_OBJECTS	:= $(addprefix $(CURR_DIR)/$(OBJECT_DIR)/, $(TEST_FILES:.cpp=.o))
 RUN_TEST_RULES	:= $(addprefix run-, $(TEST_FILES:.cpp=))

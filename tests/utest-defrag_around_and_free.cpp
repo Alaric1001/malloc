@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/21 16:43:00 by asenat            #+#    #+#             */
-/*   Updated: 2018/06/30 01:10:04 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/04 18:17:26 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ extern "C" {
 #include <vector>
 #include "tests/utils.hpp"
 
-class JoinFreeBlocksTest : public CppUnit::TestCase {
+class DefragAroundAndFreeTest : public CppUnit::TestCase {
 private:
 
 public:
-	CPPUNIT_TEST_SUITE(JoinFreeBlocksTest);
+	CPPUNIT_TEST_SUITE(DefragAroundAndFreeTest);
 	CPPUNIT_TEST(no_free_blocks);
 	CPPUNIT_TEST(free_block_after);
 	CPPUNIT_TEST(free_block_after2);
@@ -42,7 +42,7 @@ public:
 		sim_area.add_block(0, 32).add_block(32, 16);
 		t_block_location r{ nullptr, sim_area.area(), nullptr,
 			                reinterpret_cast<t_block *>(sim_area.area() + 1), TINY };
-		join_free_blocks_around(&r);
+		defrag_around_and_free(&r);
 		bool check = sim_area == std::vector<SimulatedArea::Block>{{32}, {16}};
 		CPPUNIT_ASSERT(check);
 	}
@@ -53,7 +53,7 @@ public:
 		t_block_location r{ nullptr, sim_area.area(), nullptr,
 			                reinterpret_cast<t_block *>(sim_area.area() + 1), TINY };
 		sim_area.simulate_in_true_area(TINY,
-		                               [&r] { join_free_blocks_around(&r); });
+		                               [&r] { defrag_around_and_free(&r); });
 		bool check = sim_area == std::vector<SimulatedArea::Block>{ { 48, true } };
 		CPPUNIT_ASSERT(check);
 		unmap_everything(false);
@@ -65,7 +65,7 @@ public:
 		t_block_location r{ nullptr, sim_area.area(), nullptr,
 			                reinterpret_cast<t_block *>(sim_area.area() + 1), TINY };
 		sim_area.simulate_in_true_area(TINY,
-		                               [&r] { join_free_blocks_around(&r); });
+		                               [&r] { defrag_around_and_free(&r); });
 		bool check = sim_area == std::vector<SimulatedArea::Block>{ { 64 , true }, {9}};
 		CPPUNIT_ASSERT(check);
 		unmap_everything(false);
@@ -78,7 +78,7 @@ public:
 			                reinterpret_cast<t_block *>(sim_area.area() + 1),
 			                reinterpret_cast<t_block *>(sim_area.area() + 3), TINY };
 		sim_area.simulate_in_true_area(TINY,
-		                               [&r] { join_free_blocks_around(&r); });
+		                               [&r] { defrag_around_and_free(&r); });
 		bool check = sim_area == std::vector<SimulatedArea::Block>{ { 64, true }, {9}};
 		CPPUNIT_ASSERT(check);
 		unmap_everything(false);
@@ -91,24 +91,14 @@ public:
 			                reinterpret_cast<t_block *>(sim_area.area() + 1),
 			                reinterpret_cast<t_block *>(sim_area.area() + 3), TINY };
 		sim_area.simulate_in_true_area(TINY,
-		                               [&r] { join_free_blocks_around(&r); });
+		                               [&r] { defrag_around_and_free(&r); });
 		bool check = sim_area == std::vector<SimulatedArea::Block>{ { 32 * 3, true } };
 		CPPUNIT_ASSERT(check);
 		unmap_everything(false);
 	}
-/*	
-	void free_block_around() {
-		auto sim_area = get_simulation_area(256, {{5, true}, {6}});
-		t_area* area = (t_area*)&sim_area[0];
-		auto last_size = area->blocks->next->next->size;
-		t_block_location r{nullptr, area, area->blocks, area->blocks->next};
-		join_free_blocks_around(&r);
-		CPPUNIT_ASSERT(check_sim_area(area, {{5 + sizeof(t_block) + 6 + sizeof(t_block) + last_size, true}}));
-	}
-	*/
 };
 
-CPPUNIT_TEST_SUITE_REGISTRATION(JoinFreeBlocksTest);
+CPPUNIT_TEST_SUITE_REGISTRATION(DefragAroundAndFreeTest);
 
 int main() {
 	CppUnit::TextUi::TestRunner runner;

@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 13:19:51 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/04 00:09:23 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/04 18:13:31 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	ft_free(void *ptr)
 		error_and_abort();
 	if(locations.type != LARGE)
 	{
-		join_free_blocks_around(&locations);
+		defrag_around_and_free(&locations);
 		if (locations.loc->size >= locations.loc_area->size
 				- sizeof(t_area)) {
 			printf("unmap area\n");
