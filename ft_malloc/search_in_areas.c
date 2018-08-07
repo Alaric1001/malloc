@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 17:01:37 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/02 00:42:09 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/06 20:10:29 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int			search_in_area(t_area *area,
 
 int			search_in_areas(const void *adr, t_block_location *result)
 {
+	if (!adr)
+		return (0);
 	result->type = TINY;
 	if (search_in_area(g_areas[TINY].area, (const char*)adr, result))
 		return (1);

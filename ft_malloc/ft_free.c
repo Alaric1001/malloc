@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 13:19:51 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/04 18:13:31 by asenat           ###   ########.fr       */
+/*   Updated: 2018/07/04 21:50:49 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,28 +25,6 @@ static void error_and_abort(void)
 		exit(6);
 }
 
-static int search_and_handle_errors(const void *ptr, t_block_location* ret)
-{
-	t_block *iterator;
-	int		ptr_found;
-
-	if (!search_in_areas(ptr, ret))
-		return 0;
-	iterator = g_areas[ret->type].free_blocks;
-	ptr_found = 0;
-	while (iterator)
-	{
-		if ((char*)(iterator + 1) == (char*)ptr)
-			ptr_found = 1;
-		else if (iterator > ret->prev_free && (char*)(iterator + 1) < (char*)ptr)
-			ret->prev_free = iterator;
-		else if ((char*)(iterator + 1) > (char*)ptr)
-			return (!ptr_found);
-		iterator = iterator->next_free;
-	}
-	return (!ptr_found);
-}
-
 void	ft_free(void *ptr)
 {
 	t_block_location	locations;
@@ -54,7 +32,7 @@ void	ft_free(void *ptr)
 	if (!ptr)
 		return ;
 	ft_bzero(&locations, sizeof(locations));
-	if (!search_and_handle_errors(ptr, &locations))
+	if (!search_address(ptr, &locations))
 		error_and_abort();
 	if(locations.type != LARGE)
 	{
