@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 11:16:23 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/03 17:31:06 by asenat           ###   ########.fr       */
+/*   Updated: 2018/08/08 16:19:47 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,8 @@ typedef struct		s_area_and_type {
  ** These macros express the number of memory pages in each areas
 **/
 
-# define TINY_AREA_SIZE		2
-# define SMALL_AREA_SIZE	4
+# define TINY_AREA_SIZE		6
+# define SMALL_AREA_SIZE	12
 
 /**
  * the three malloc main areas
