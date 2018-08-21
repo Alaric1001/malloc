@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 17:01:37 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/06 20:10:29 by asenat           ###   ########.fr       */
+/*   Updated: 2018/08/09 23:04:27 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ static int search_addr(const t_area *area,
 			result->loc = iterator;
 			return (1);
 		}
+		if (!iterator->size)
+			break ;
 		cursor += round_size(result->type, iterator->size);
 	}
 	return (0);
