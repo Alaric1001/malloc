@@ -6,7 +6,7 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/07 17:26:46 by asenat            #+#    #+#              #
-#    Updated: 2018/07/01 16:47:34 by asenat           ###   ########.fr        #
+#    Updated: 2018/08/22 14:08:42 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,12 @@ endif
 
 ## Libft
 LIBFT		:= libft/libft.a
-LIBFT_FLAGS	:= -L./libft -Wl,--whole-archive -lft -Wl,--no-whole-archive
 MAKELIBFT	:= make -C libft
+ifeq ($(shell uname -s), Darwin)
+LIBFT_FLAGS	:= -L./libft -lft
+else
+LIBFT_FLAGS	+= -L./libft -Wl,--whole-archive -lft -Wl,--no-whole-archive
+endif
 #
 
 ## Standard things
@@ -28,12 +32,17 @@ MAKELIBFT	:= make -C libft
 .SUFFIXES:
 NAME		:= libft_malloc_$(HOSTTYPE).so
 SHORT_NAME	:= libft_malloc.so
-CC 		:= gcc
+CC 		:= clang
 CFLAGS		:= -I. -fPIC -Wall -Wextra -Werror -g
 LFLAGS		:= -shared
 RM		:= rm -f
 OBJECT_DIR	:= obj
 COMP		:= $(CC) $(CFLAGS) -c -o
+ifeq ($(shell uname -s), Darwin)
+ECHO		:= echo
+else
+ECHO		:= echo -e
+endif
 #
 
 ## Sources directories
@@ -46,7 +55,7 @@ SRC_DIRS	:= ft_malloc utils malloc
 #
 BLUE		:= "\033[34m"
 GREEN		:= "\033[32m"
-RED			:= "\033[31m"
+RED		:= "\033[31m"
 RESET		:= "\033[0m"
 PNAME		:= $(BLUE)$(NAME)$(RESET)
 #
@@ -63,11 +72,11 @@ OBJ_DIRS	:= $(patsubst %, %/obj, $(SRC_DIRS))
 
 $(NAME): $(LIBFT) $(OBJ_DIRS) $(OBJECTS) $(IMPL_OBJS)
 	$(CC) $(LFLAGS) $(LIBFT_FLAGS) -o $(NAME) $(OBJECTS) $(IMPL_OBJS)
-	@echo -e $(PNAME)$(GREEN) "linking complete"$(RESET)
+	@$(ECHO) $(PNAME)$(GREEN) "linking complete"$(RESET)
 
 $(SHORT_NAME):
 	ln -fs $(NAME) $(SHORT_NAME)
-	@echo -e $(SHORT_NAME)$(GREEN) "->" $(PNAME)$(GREEN) "generated"$(RESET)
+	@$(ECHO) $(SHORT_NAME)$(GREEN) "->" $(PNAME)$(GREEN) "generated"$(RESET)
 
 ## Including compilation rules
 #
@@ -88,13 +97,13 @@ $(LIBFT):
 .PHONY: clean
 clean:
 	@$(RM) -r $(OBJ_DIRS)
-	@echo "Objects directories removed"
+	@$(ECHO) "Objects directories removed"
 
 .PHONY: fclean
 fclean: clean
 	@$(RM) $(NAME) $(SHORT_NAME) $(TEST_TARGETS)
 	@$(MAKELIBFT) fclean
-	@echo $(NAME) "and" $(SHORT_NAME) "deleted"
+	@$(ECHO) $(NAME) "and" $(SHORT_NAME) "deleted"
 
 .PHONY: re
 re: fclean all

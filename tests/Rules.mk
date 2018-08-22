@@ -1,6 +1,10 @@
 TEST_CC			:= g++
 TEST_CFLAGS		:= -I. -I$(CPPUNIT_PATH)/include -std='c++14' -g -Wno-deprecated-declarations
+ifeq ($(shell uname -s), Darwin)
+TEST_LFLAGS		:= -L$(CPPUNIT_PATH)/lib -ldl -lcppunit -L./libft -lft
+else
 TEST_LFLAGS		:= -L$(CPPUNIT_PATH)/lib -ldl -lcppunit -L./libft -Wl,--whole-archive -lft -Wl,--no-whole-archive
+endif
 COMPLINK		:= $(CC) $(TEST_CFLAGS) $(TEST_LFLAGS) -o
 
 CURR_DIR		:= tests
@@ -30,13 +34,13 @@ clear-tests:
 
 run-%: all $(TEST_OBJ_DIR) $(CURR_DIR)/% $(CURR_DIR)/utils.hpp
 	$(eval TEST_NAME := $(subst run-,, $@))
-	$(eval FAIL := $(shell $(addprefix $(CURR_DIR)/, $(TEST_NAME)) > $(TEST_NAME).out; echo $$?))
+	$(eval FAIL := $(shell $(addprefix $(CURR_DIR)/, $(TEST_NAME)) > $(TEST_NAME).out; $(ECHO) $$?))
 	@if [ $(FAIL) -gt 0 ]; \
 	then \
-		echo -e "["$(RED)KO$(RESET)"] -" $(TEST_NAME); \
+		$(ECHO) "["$(RED)KO$(RESET)"] -" $(TEST_NAME); \
 		cat $(TEST_NAME).out; \
 	else \
-		echo -e "["$(GREEN)OK$(RESET)"] -" $(TEST_NAME); \
+		$(ECHO)  "["$(GREEN)OK$(RESET)"] -" $(TEST_NAME); \
 	fi
 	@rm -f $(TEST_NAME).out
 
