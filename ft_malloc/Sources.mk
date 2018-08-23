@@ -2,6 +2,7 @@
 
 OBJ_FILES_ft_malloc  :=  alloc_block.o \
                defrag_around_and_free.o \
+               ft_calloc.o \
                ft_free.o \
                ft_malloc.o \
                ft_realloc.o \

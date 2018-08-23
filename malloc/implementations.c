@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/30 00:32:29 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/04 19:52:43 by asenat           ###   ########.fr       */
+/*   Updated: 2018/08/23 12:53:45 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,11 @@
 void	*malloc(size_t size)
 {
 	return (ft_malloc(size));
+}
+
+void	*calloc(size_t count, size_t size)
+{
+	return (ft_calloc(count, size));
 }
 
 void	free(void *ptr)
