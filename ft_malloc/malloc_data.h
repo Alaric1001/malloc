@@ -59,8 +59,8 @@ typedef struct		s_area_and_type {
  ** These macros express the number of memory pages in each areas
 **/
 
-# define TINY_AREA_SIZE		6
-# define SMALL_AREA_SIZE	12
+# define TINY_AREA_SIZE		488
+# define SMALL_AREA_SIZE	3906
 
 /**
  * the three malloc main areas
