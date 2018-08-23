@@ -19,12 +19,6 @@
 
 #include <stdio.h>
 
-static void error_and_abort(void)
-{
-		ft_putstr_fd("free(): Invalid pointer\n", 2);
-		exit(6);
-}
-
 void	ft_free(void *ptr)
 {
 	t_block_location	locations;
@@ -33,13 +27,12 @@ void	ft_free(void *ptr)
 		return ;
 	ft_bzero(&locations, sizeof(locations));
 	if (!search_address(ptr, &locations))
-		error_and_abort();
+		return ;
 	if(locations.type != LARGE)
 	{
 		defrag_around_and_free(&locations);
 		if (locations.loc->size >= locations.loc_area->size
 				- sizeof(t_area)) {
-			printf("unmap area\n");
 			remove_from_free_lst(locations.type, locations.loc);
 			unmap_area(&locations);
 		}

@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 14:58:59 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/03 17:29:43 by asenat           ###   ########.fr       */
+/*   Updated: 2018/08/22 15:47:37 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include "utils/utils.h"
 #include "libft/output/output.h"
 #include <stdio.h>
-
-size_t ma_supa_size = 0;
 
 t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t size)
 {
@@ -50,7 +48,6 @@ t_block		*do_malloc(t_block_type type, size_t size)
 	t_block *last_free;
 	t_block **current_free;
 	t_block	*tmp;
-	ma_supa_size = size;
 	last_free = NULL;
 	current_free = &g_areas[type].free_blocks;
 	while (*current_free)
