@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 13:19:51 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/04 21:50:49 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/04 11:11:16 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,15 +28,20 @@ void	ft_free(void *ptr)
 	ft_bzero(&locations, sizeof(locations));
 	if (!search_address(ptr, &locations))
 		return ;
-	if(locations.type != LARGE)
+	free_location(&locations);
+}
+
+void 	free_location(t_block_location *locations)
+{
+	if (locations->type != LARGE)
 	{
-		defrag_around_and_free(&locations);
-		if (locations.loc->size >= locations.loc_area->size
+		defrag_around_and_free(locations);
+		if (locations->loc->size >= locations->loc_area->size
 				- sizeof(t_area)) {
-			remove_from_free_lst(locations.type, locations.loc);
-			unmap_area(&locations);
+			remove_from_free_lst(locations->type, locations->loc);
+			unmap_area(locations);
 		}
 	}
 	else
-		unmap_area(&locations);
+		unmap_area(locations);
 }

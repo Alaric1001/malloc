@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 15:00:20 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/04 21:49:59 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/04 10:55:26 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ int		search_in_areas(const void *adr, t_block_location *result);
 
 void   	defrag_around_and_free(t_block_location *location);
 int		search_address(const void *ptr, t_block_location* ret);
+void	free_location(t_block_location *locations);
 
 #endif
