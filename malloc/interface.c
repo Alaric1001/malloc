@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/30 00:32:29 by asenat            #+#    #+#             */
-/*   Updated: 2018/08/23 13:06:19 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/04 14:46:27 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,11 @@ void	free(void *ptr)
 void	*realloc(void *ptr, size_t size)
 {
 	return (ft_realloc(ptr, size));
+}
+
+void	*reallocf(void *ptr, size_t size)
+{
+	return (ft_reallocf(ptr, size));
 }
 
 void show_alloc_mem(void)

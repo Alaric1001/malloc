@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/04 19:54:38 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/04 14:11:28 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/04 17:24:46 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,4 +101,16 @@ void	*ft_realloc(void *ptr, size_t size)
 //	else if (is_next_enough(&locations, round_size(locations.type, size)))
 //		return (resize_with_next(&locations, size));
 //	return (free_and_malloc(ptr, size - sizeof(t_block)));
+}
+
+void	*ft_reallocf(void *ptr, size_t size)
+{
+	t_block_location locations;
+
+	if (!size)
+		return (NULL);
+	ft_bzero(&locations, sizeof(locations));
+	if (!search_address(ptr, &locations))
+		return (ft_malloc(size));
+	return free_and_malloc(&locations, size, 1);
 }
