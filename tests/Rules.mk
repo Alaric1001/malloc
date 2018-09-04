@@ -13,7 +13,8 @@ TEST_FILES		:= 	utest-utils.cpp \
 					utest-search_in_areas.cpp \
 					utest-defrag_around_and_free.cpp \
 					realloc_tests.cpp \
-					manual-tests.cpp
+					manual-tests.cpp \
+					simulation.cpp
 TEST_OBJECTS	:= $(addprefix $(CURR_DIR)/$(OBJECT_DIR)/, $(TEST_FILES:.cpp=.o))
 RUN_TEST_RULES	:= $(addprefix run-, $(TEST_FILES:.cpp=))
 
