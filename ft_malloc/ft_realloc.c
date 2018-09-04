@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/04 19:54:38 by asenat            #+#    #+#             */
-/*   Updated: 2018/08/09 23:33:18 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/04 14:11:28 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,23 @@
 #include "utils/utils.h"
 #include "libft/memory/memory.h"
 
-static void	*free_and_malloc(void *ptr, size_t size)
+static void	*free_and_malloc(t_block_location *locations, size_t size, int free_if_fail)
 {
-	ft_free(ptr);
-	return (ft_malloc(size));
+	void 	*ret;
+	size_t	cpy;
+
+	if (!(ret = ft_malloc(size)))
+	{
+		if (free_if_fail)
+			free_location(locations);
+		return (NULL);
+	}
+	cpy = locations->loc->size;
+	if (size < cpy)
+		cpy = size;
+	ft_memcpy(ret, locations->loc + 1, cpy);
+	free_location(locations);
+	return (ret);
 }
 
 //static int is_next_enough(const t_block_location *locations,
@@ -69,14 +82,14 @@ static void	*free_and_malloc(void *ptr, size_t size)
 //
 void	*ft_realloc(void *ptr, size_t size)
 {
-	//t_block_location locations;
+	t_block_location locations;
 
 	if (!size)
 		return (NULL);
-	return free_and_malloc(ptr, size);
-//	ft_bzero(&locations, sizeof(locations));
-//	if (!search_address(ptr, &locations))
-//		return (ft_malloc(size));
+	ft_bzero(&locations, sizeof(locations));
+	if (!search_address(ptr, &locations))
+		return (ft_malloc(size));
+	return free_and_malloc(&locations, size, 0);
 //	if (locations.type != get_block_type(locations.loc->size - sizeof(t_block)))
 //		return (free_and_malloc(ptr, size));
 //	size += sizeof(t_block);
