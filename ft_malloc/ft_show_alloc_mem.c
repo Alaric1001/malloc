@@ -43,6 +43,11 @@ static void display_blocks(const t_area_and_type *val, size_t *total_size, t_obu
 			ft_add_str_to_obuff(" -> free", obuff);
 		ft_add_char_to_obuff('\n', obuff);
 		(*total_size) += iterator->size - sizeof(t_block);
+		if (!round_size(val->type, iterator->size))
+		{
+			abort();
+			ft_flush_obuff(obuff);
+		}
 		cursor += round_size(val->type, iterator->size);
 	}
 }

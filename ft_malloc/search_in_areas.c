@@ -31,7 +31,7 @@ static int search_addr(const t_area *area,
 			return (1);
 		}
 		if (!iterator->size)
-			break ;
+			abort();
 		cursor += round_size(result->type, iterator->size);
 	}
 	return (0);
