@@ -28,7 +28,7 @@ static void display_blocks(const t_area_and_type *val, size_t *total_size, t_obu
 	const t_area* area = val->area;
 
 	cursor = sizeof(t_area);
-	while ((int)(area->size - cursor) > (int)sizeof(t_block))
+	while ((intmax_t)(area->size - cursor) > (intmax_t)sizeof(t_block))
 	{
 		iterator = (t_block *)((char *)(area) + cursor);
 		add_ptr_to_obuff(iterator + 1, obuff);

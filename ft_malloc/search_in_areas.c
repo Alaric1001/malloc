@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 17:01:37 by asenat            #+#    #+#             */
-/*   Updated: 2018/08/09 23:04:27 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/04 12:10:25 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static int search_addr(const t_area *area,
 	t_block *iterator;
 
 	cursor = sizeof(t_area);
-	while ((int)(area->size - cursor) > (int)sizeof(t_block))
+	while ((intmax_t)(area->size - cursor) > (intmax_t)sizeof(t_block))
 	{
 		iterator = (t_block *)((char *)(area) + cursor);
 		if ((char*)(iterator + 1) == adr)

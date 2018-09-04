@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/15 15:28:24 by asenat            #+#    #+#             */
-/*   Updated: 2018/05/24 17:07:33 by asenat           ###   ########.fr       */
+/*   Updated: 2018/08/23 14:27:15 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ public:
 	{
 		std::size_t cursor = sizeof(t_area);
 		auto* area = sim_area.area();
-		while (static_cast<int>(area->size - cursor)
-				> static_cast<int>(sizeof(t_block))) {
+		while (static_cast<intmax_t>(area->size - cursor)
+				> static_cast<intmax_t>(sizeof(t_block))) {
 			const t_block *block = reinterpret_cast<const t_block *>(
 			reinterpret_cast<const char *>(area) + cursor);
 			if (not action(block))
