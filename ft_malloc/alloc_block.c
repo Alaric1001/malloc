@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 14:58:59 by asenat            #+#    #+#             */
-/*   Updated: 2018/08/22 15:47:37 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/04 10:35:00 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t s
 		next->next_free = ret->next_free;
 		ret->next_free = next;
 	}
+	else if (ret->size != rounded_size)
+		return NULL;
 	ret->size = size + sizeof(t_block);
 	if (!last_it)
 		*it = ret->next_free;
