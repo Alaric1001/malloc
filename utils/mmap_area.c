@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 12:17:00 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/01 13:24:58 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/04 13:15:50 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ static size_t	avoid_overflow(t_block_type type, size_t area_size)
 	return (area_size);
 }
 
-#include <stdio.h>
 t_area*			mmap_area(t_block_type type, size_t size)
 {
 	size_t	area_size;
@@ -60,10 +59,7 @@ t_area*			mmap_area(t_block_type type, size_t size)
 	mapped_region =  mmap(0, area_size, PROT_READ | PROT_WRITE
 			, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
 	if (mapped_region == MAP_FAILED)
-	{
-		perror("err");
 		return (NULL);
-	}
 	g_areas[type].total_size += area_size;
 	ret = (t_area*)mapped_region;
 	ret->next = NULL;
