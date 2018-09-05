@@ -6,7 +6,7 @@
 #    By: asenat <marvin@42.fr>                      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/07 17:26:46 by asenat            #+#    #+#              #
-#    Updated: 2018/08/22 14:08:42 by asenat           ###   ########.fr        #
+#    Updated: 2018/09/05 11:25:38 by asenat           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,10 @@ LIBFT_FLAGS	+= -L./libft -Wl,--whole-archive -lft -Wl,--no-whole-archive
 endif
 #
 
+## pthread
+PTHREAD_FLAGS	:= -lpthread -D_REENTRANT
+#
+
 ## Standard things
 #
 .SUFFIXES:
@@ -34,7 +38,7 @@ NAME		:= libft_malloc_$(HOSTTYPE).so
 SHORT_NAME	:= libft_malloc.so
 CC 		:= clang
 CFLAGS		:= -I. -fPIC -Wall -Wextra -Werror -g
-LFLAGS		:= -shared
+LFLAGS		:= -shared $(PTHREAD_FLAGS) $(LIBFT_FLAGS)
 RM		:= rm -f
 OBJECT_DIR	:= obj
 COMP		:= $(CC) $(CFLAGS) -c -o
@@ -71,7 +75,7 @@ include $(patsubst %, %/Sources.mk, $(SRC_DIRS))
 OBJ_DIRS	:= $(patsubst %, %/obj, $(SRC_DIRS))
 
 $(NAME): $(LIBFT) $(OBJ_DIRS) $(OBJECTS) $(IMPL_OBJS)
-	$(CC) $(LFLAGS) $(LIBFT_FLAGS) -o $(NAME) $(OBJECTS) $(IMPL_OBJS)
+	$(CC) $(LFLAGS) -o $(NAME) $(OBJECTS) $(IMPL_OBJS)
 	@$(ECHO) $(PNAME)$(GREEN) "linking complete"$(RESET)
 
 $(SHORT_NAME):

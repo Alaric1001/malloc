@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/04 19:54:38 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/04 17:24:46 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/05 15:58:37 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,9 @@ static void	*free_and_malloc(t_block_location *locations, size_t size, int free_
 	if (!(ret = ft_malloc(size)))
 	{
 		if (free_if_fail)
+		{
 			free_location(locations);
+		}
 		return (NULL);
 	}
 	cpy = locations->loc->size;
@@ -82,12 +84,14 @@ static void	*free_and_malloc(t_block_location *locations, size_t size, int free_
 //
 void	*ft_realloc(void *ptr, size_t size)
 {
-	t_block_location locations;
+	t_block_location 	locations;
+	int					addr_found;
 
 	if (!size)
 		return (NULL);
 	ft_bzero(&locations, sizeof(locations));
-	if (!search_address(ptr, &locations))
+	addr_found = search_address(ptr, &locations);
+	if (!addr_found)
 		return (ft_malloc(size));
 	return free_and_malloc(&locations, size, 0);
 //	if (locations.type != get_block_type(locations.loc->size - sizeof(t_block)))
@@ -106,11 +110,13 @@ void	*ft_realloc(void *ptr, size_t size)
 void	*ft_reallocf(void *ptr, size_t size)
 {
 	t_block_location locations;
+	int					addr_found;
 
 	if (!size)
 		return (NULL);
 	ft_bzero(&locations, sizeof(locations));
-	if (!search_address(ptr, &locations))
+	addr_found = search_address(ptr, &locations);
+	if (!addr_found)
 		return (ft_malloc(size));
 	return free_and_malloc(&locations, size, 1);
 }

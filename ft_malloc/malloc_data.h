@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 11:16:23 by asenat            #+#    #+#             */
-/*   Updated: 2018/08/22 16:10:22 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/05 16:02:35 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct		s_area
 	size_t			size;
 	struct s_area	*next;
 }					t_area;
-
+//TODO CONTRAINER LOL
 typedef struct		s_area_contrainer
 {
 	size_t	total_size;
@@ -70,4 +70,5 @@ typedef struct		s_area_and_type {
  */
 
 extern t_area_container		g_areas[3];
+
 #endif
