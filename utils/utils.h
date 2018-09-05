@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 10:54:30 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/03 14:21:41 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/05 17:06:09 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,6 @@ const char* 	get_type_str(t_block_type type);
 int				is_in_free_list(const t_block* b, const t_block* free_list);
 t_block*		search_free_block(t_block_type type, const t_block* ref);
 void			remove_from_free_lst(t_block_type type, const t_block *block);
+t_block			*get_next_block(t_block_type type, const t_block *block);
 
 #endif

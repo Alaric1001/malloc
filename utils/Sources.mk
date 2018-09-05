@@ -3,6 +3,7 @@
 OBJ_FILES_utils  :=  add_new_block.o \
                get_area_size.o \
                get_block_type.o \
+               get_next_block.o \
                is_in_free_list.o \
                mmap_area.o \
                remove_from_free_lst.o \
