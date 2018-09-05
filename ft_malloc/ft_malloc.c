@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 10:45:34 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 16:04:00 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/05 16:08:31 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	*ft_malloc(size_t size)
 	t_block*		ret;
 
 	if (!size)
-		return (NULL);
+		size = 16ul;
 	type = get_block_type(size);
 	ret = do_malloc(type, size);
 	if (!ret)

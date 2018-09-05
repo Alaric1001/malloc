@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/06 20:05:37 by asenat            #+#    #+#             */
-/*   Updated: 2018/08/07 22:26:11 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/05 14:04:49 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,12 @@ extern "C" {
 class AllocBlockTest : public CppUnit::TestCase {
 public:
 	CPPUNIT_TEST_SUITE(AllocBlockTest);
-	CPPUNIT_TEST(zero_check);
 	CPPUNIT_TEST(not_found_check);
 	CPPUNIT_TEST(enough_space);
 	CPPUNIT_TEST(no_space_after);
 	CPPUNIT_TEST(space_after);
 	CPPUNIT_TEST_SUITE_END();
 	
-	void zero_check() {
-		CPPUNIT_ASSERT(!ft_realloc(nullptr, 0));
-	}
-
 	void not_found_check() {
 		auto test = [](void* adr) {
 			SimulatedArea sa(256, false);

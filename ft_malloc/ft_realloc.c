@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/04 19:54:38 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 16:45:36 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/05 16:46:46 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	*ft_realloc(void *ptr, size_t size)
 	int					addr_found;
 
 	if (!size)
-		return (NULL);
+		size = 16ul;
 	ft_bzero(&locations, sizeof(locations));
 	addr_found = search_address(ptr, &locations);
 	if (!addr_found)
