@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/06/30 00:32:29 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 16:03:35 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/05 16:05:32 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,15 +47,6 @@ void	*realloc(void *ptr, size_t size)
 	void *ret;
 	pthread_mutex_lock(&g_mutex);
 	ret = ft_realloc(ptr, size);
-	pthread_mutex_unlock(&g_mutex);
-	return ret;
-}
-
-void	*reallocf(void *ptr, size_t size)
-{
-	void *ret;
-	pthread_mutex_lock(&g_mutex);
-	ret = ft_reallocf(ptr, size);
 	pthread_mutex_unlock(&g_mutex);
 	return ret;
 }
