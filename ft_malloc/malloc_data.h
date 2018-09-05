@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 11:16:23 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 16:02:35 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/05 16:07:49 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,19 @@
 
 # include <stdlib.h>
 
+typedef struct		s_area
+{
+	size_t			size;
+	struct s_area	*next;
+}					t_area;
+
 typedef struct		s_block
 {
 	size_t			size;
 	struct s_block	*next_free;
 }					t_block;
 
-typedef struct		s_area
-{
-	size_t			size;
-	struct s_area	*next;
-}					t_area;
-//TODO CONTRAINER LOL
-typedef struct		s_area_contrainer
+typedef struct		s_area_container
 {
 	size_t	total_size;
 	t_block	*free_blocks;
