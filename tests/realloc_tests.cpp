@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/06 20:05:37 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 14:04:49 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/06 17:23:15 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,14 @@ extern "C" {
 #include <memory>
 #include <iostream>
 
+#define BLOCK_SIZE(size) size + sizeof(t_block)
 
 class AllocBlockTest : public CppUnit::TestCase {
 public:
 	CPPUNIT_TEST_SUITE(AllocBlockTest);
 	CPPUNIT_TEST(not_found_check);
-	CPPUNIT_TEST(enough_space);
+	CPPUNIT_TEST(enough_space_no_new_block);
+	CPPUNIT_TEST(enough_space_new_block);
 	CPPUNIT_TEST(no_space_after);
 	CPPUNIT_TEST(space_after);
 	CPPUNIT_TEST_SUITE_END();
@@ -51,23 +53,38 @@ public:
 		test(reinterpret_cast<void*>(0xbeef));
 	}
 
-	void enough_space() {
-		auto test = [] (std::size_t initial, std::size_t realloc, t_block_type type) -> bool {
-			SimulatedArea sa(4096, false, type);
+	void enough_space_no_new_block() {
+		auto test = [](std::size_t initial, std::size_t realloc, t_block_type type) -> bool {
+			SimulatedArea sa(initial * 2, false, type);
 			sa.add_block(0, initial);
 			sa.simulate_in_true_area(type, [&]() {
 					ft_realloc(reinterpret_cast<t_block*>(sa.area() + 1) + 1, realloc);
 			});
-			bool check = sa == std::vector<SimulatedArea::Block>{{realloc + sizeof(t_block), false}};
+			bool check = sa == std::vector<SimulatedArea::Block>{{BLOCK_SIZE(realloc), false}};
 			unmap_everything(false);
 			return check;
 		};
-		CPPUNIT_ASSERT(test(32, 8, TINY));
-		CPPUNIT_ASSERT(not test(32, 20, TINY));
-		CPPUNIT_ASSERT(test(429, 100, SMALL));
-		CPPUNIT_ASSERT(not test(128, 500, SMALL));
-		CPPUNIT_ASSERT(test(1024, 1000, LARGE));
-		CPPUNIT_ASSERT(not test(1024, 1015, LARGE));
+		CPPUNIT_ASSERT(test(32, 15, TINY));
+		CPPUNIT_ASSERT(not test(32, 19980, TINY));
+		CPPUNIT_ASSERT(test(20480, 20453, SMALL));
+	}
+
+	void enough_space_new_block() {
+		auto test = [](std::size_t initial, std::size_t realloc, t_block_type type) -> bool {
+			SimulatedArea sa(initial * 2, false, type);
+			sa.add_block(0, initial);
+			sa.simulate_in_true_area(type, [&]() {
+					ft_realloc(reinterpret_cast<t_block*>(sa.area() + 1) + 1, realloc);
+			});
+			bool check = sa == std::vector<SimulatedArea::Block>{{BLOCK_SIZE(realloc), false},
+								{initial - round_size(type, realloc + sizeof(t_block)), true}};
+			unmap_everything(false);
+			return check;
+		};
+		CPPUNIT_ASSERT(test(64, 9, TINY));
+		CPPUNIT_ASSERT(test(64, 15, TINY));
+		CPPUNIT_ASSERT(not test(64, 49, TINY));
+		CPPUNIT_ASSERT(test(20992, 20450, SMALL));
 	}
 
 	void no_space_after() {

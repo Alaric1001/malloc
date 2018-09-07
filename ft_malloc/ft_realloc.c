@@ -6,7 +6,7 @@
 /*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/04 19:54:38 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 16:46:46 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 14:59:27 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,72 +31,98 @@ static void	*free_and_malloc(t_block_location *locations, size_t size)
 	return (ret);
 }
 
-//static int is_next_enough(const t_block_location *locations,
-//		size_t size)
+static int is_next_enough(const t_block_location *locations,
+		size_t size)
+{
+	t_block*	next;
+	size_t		total_size;
+	size_t		r_size;
+
+	r_size = round_size(locations->type, size);
+	next = get_next_block(locations->type, locations->loc);
+	if (!is_in_free_list(next, g_areas[locations->type].free_blocks))
+		return (0);
+	total_size = round_size(locations->type,
+			locations->loc->size + next->size);
+	return (total_size == size || total_size
+			>= round_size(locations->type, size + sizeof(t_block) + 1));
+}
+
+static void	*resize_with_next(t_block_location *locations,
+		size_t size)
+{
+	t_block 	*next;
+	t_block 	*new_next;
+	t_block		*curr;
+	size_t		r_size;
+	size_t		size_needed;
+
+	r_size = round_size(locations->type, size);
+	curr = locations->loc;
+	next = get_next_block(locations->type, locations->loc);
+	size_needed = r_size - round_size(locations->type, curr->size);
+	curr->size = size;
+	if (size_needed < next->size)
+	{
+		new_next = (t_block*)((char*)next + size_needed);
+		new_next->next_free = next->next_free;
+		new_next->size = next->size - size_needed;
+		next->next_free = new_next;
+	}
+	if (locations->prev_free)
+		locations->prev_free->next_free = next->next_free;
+	else
+		g_areas[locations->type].free_blocks = next->next_free;
+	return (locations->loc + 1);
+}
+
+//static void	*try_to_resize_current(t_block_location *locations, size_t size)
 //{
-//	t_block*	next;
-//	size_t		total_size;
+//	size_t 	curr_r_size;
+//	size_t 	r_size;
+//	t_block	*next;
 //
-//	next = (t_block*)((char*)locations->loc +
-//			round_size(locations->type, locations->loc->size));
-//	if (!is_in_free_list(next, g_areas[locations->type].free_blocks))
-//		return (0);
-//	total_size = round_size(locations->type,
-//				locations->loc->size + next->size);
-//	return (total_size == size || total_size
-//			>= round_size(locations->type, size + sizeof(t_block) + 1));
-//}
-//
-//static void	*resize_with_next(t_block_location *locations,
-//		size_t size)
-//{
-//	t_block 	*next;
-//	t_block 	*new_next;
-//	t_block		*curr;
-//	size_t		r_size;
-//	size_t		size_needed;
-//
+//	curr_r_size = round_size(locations->type, locations->loc->size);
+//	if (curr_r_size < size)
+//		return (NULL);
 //	r_size = round_size(locations->type, size);
-//	curr = locations->loc;
-//	next = (t_block*)((char*)locations->loc +
-//			round_size(locations->type, locations->loc->size));
-//	size_needed = r_size - round_size(locations->type, curr->size);
-// 	curr->size = size;
-//	if (size_needed < next->size)
+//	if (r_size < curr_r_size && locations->type != LARGE)
 //	{
-//		new_next = (t_block*)((char*)next + size_needed);
-//		new_next->next_free = next->next_free;
-//		new_next->size = next->size - size_needed;
-//		next->next_free = new_next;	
+//		if ((intmax_t)(curr_r_size - r_size) <= (int)sizeof(t_block))
+//			return (NULL);
+//		locations->loc->size = size;
+//		next = get_next_block(locations->type, locations->loc);
+//		next->size = curr_r_size - r_size;
+//		if (locations->prev_free)
+//		{
+//			next->next_free = locations->prev_free;
+//			locations->prev_free->next_free = next;
+//		}
+//		else
+//		{
+//			next->next_free = g_areas[locations->type].free_blocks;
+//			g_areas[locations->type].free_blocks = next;
+//		}
 //	}
-//	if (locations->prev_free)
-//		locations->prev_free->next_free = next->next_free;
-//	else
-//		g_areas[locations->type].free_blocks->next_free = next->next_free;  
-//	return (locations->loc);
+//	locations->loc->size = size;
+//	return (locations->loc + 1);
 //}
-//
+
 void	*ft_realloc(void *ptr, size_t size)
 {
 	t_block_location 	locations;
-	int					addr_found;
 
 	if (!size)
 		size = 16ul;
 	ft_bzero(&locations, sizeof(locations));
-	addr_found = search_address(ptr, &locations);
-	if (!addr_found)
+	if (!(search_address(ptr, &locations)))
 		return (ft_malloc(size));
-	return free_and_malloc(&locations, size);
-//	if (locations.type != get_block_type(locations.loc->size - sizeof(t_block)))
-//		return (free_and_malloc(ptr, size));
-//	size += sizeof(t_block);
-//	if (round_size(locations.type, locations.loc->size) >= size)
-//	{
-//		locations.loc->size = size;
-//		return (locations.loc);
-//	}
-//	else if (is_next_enough(&locations, round_size(locations.type, size)))
-//		return (resize_with_next(&locations, size));
-//	return (free_and_malloc(ptr, size - sizeof(t_block)));
+	if (locations.type != get_block_type(locations.loc->size - sizeof(t_block)))
+		return (free_and_malloc(&locations, size));
+	size += sizeof(t_block);
+	if (round_size(locations.type, locations.loc->size) >= size)
+		return (locations.loc + 1);
+	if (is_next_enough(&locations, size))
+		return (resize_with_next(&locations, size));
+	return (free_and_malloc(&locations, size - sizeof(t_block)));
 }
