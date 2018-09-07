@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 14:58:59 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 10:55:00 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 11:21:33 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,13 @@
 t_block		*do_malloc(t_block_type type, size_t size)
 {
 	t_area **area;
-	t_block *last_free;
 	t_block **current_free;
 	t_block	*tmp;
-	last_free = NULL;
+
 	current_free = &g_areas[type].free_blocks;
 	while (*current_free)
 	{
-		if ((tmp = alloc_block(type, current_free, last_free, size)))
+		if ((tmp = alloc_block(type, current_free, size)))
 			return (tmp);
 		current_free = &(*current_free)->next_free;
 	}
@@ -36,10 +35,10 @@ t_block		*do_malloc(t_block_type type, size_t size)
 	if (!(*area = mmap_area(type, size)))
 		return (NULL);
 	*current_free = (t_block*)((*area) + 1);
-	return (alloc_block(type, current_free, last_free, size));
+	return (alloc_block(type, current_free, size));
 }
 
-t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t size)
+t_block	*alloc_block(t_block_type type, t_block** it, size_t size)
 {
 	t_block *ret;
 	t_block *next;
@@ -59,10 +58,7 @@ t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t s
 	else if (ret->size != rounded_size)
 		return NULL;
 	ret->size = size + sizeof(t_block);
-	if (!last_it)
-		*it = ret->next_free;
-	else
-		last_it->next_free = ret->next_free;
+	*it = ret->next_free;
 	ret->next_free = NULL;
 	return ret;
 }

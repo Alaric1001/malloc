@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 11:16:23 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 16:07:49 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/06 12:03:49 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ typedef struct		s_area_and_type {
 
 /**
  ** These macros express the number of memory pages in each areas
+ ** TINY Area's can store elements of maximum size: 19972 bytes
+ ** SMALL Area's can store elements of maximum size: 159973 bytes
 **/
 
 # define TINY_AREA_SIZE		488

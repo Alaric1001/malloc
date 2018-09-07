@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 15:00:20 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/04 10:55:26 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 11:21:52 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include "ft_malloc/malloc_data.h"
 
 t_block	*do_malloc(t_block_type type, size_t size);
-t_block	*alloc_block(t_block_type type, t_block** it, t_block* last_it, size_t size);
+t_block	*alloc_block(t_block_type type, t_block** it, size_t size);
 t_block	*resize_block(t_block* block, size_t size);
 
 int		search_in_area(t_area* area,

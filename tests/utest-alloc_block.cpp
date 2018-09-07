@@ -29,13 +29,13 @@ public:
 		t_block b;
 		b.size = 1;
 		t_block *b_ptr = &b;
-		CPPUNIT_ASSERT(not alloc_block(TINY, &b_ptr, nullptr, 2));
+		CPPUNIT_ASSERT(not alloc_block(TINY, &b_ptr, 2));
 	}
 
 	void one_block() {
 		SimulatedArea sarea(128);
 		std::size_t real_mem_size = 128 - sizeof(t_area) - sizeof(t_block);
-		t_block* first = alloc_block(TINY, sarea.d_free_list(), nullptr, 12);
+		t_block* first = alloc_block(TINY, sarea.d_free_list(), 12);
 		t_block *second =
 		reinterpret_cast<t_block *>(reinterpret_cast<char*>(first + 1) + 16);
 		CPPUNIT_ASSERT(second);
@@ -50,8 +50,8 @@ public:
 	void two_blocks_second_allocated() {
 		SimulatedArea sarea(128, false);
 		sarea.add_block(0, 2, true).add_block(sizeof(t_block) + 2, 16 + sizeof(t_block), true);
-		auto* nxt = sarea.free_list()->next_free;
-		t_block* block = alloc_block(TINY, &nxt, sarea.free_list(), 16);
+		auto** nxt = &sarea.free_list()->next_free;
+		t_block* block = alloc_block(TINY, nxt, 16);
 		CPPUNIT_ASSERT(block);
 		CPPUNIT_ASSERT_EQUAL(16ul + sizeof(t_block), block->size);
 		CPPUNIT_ASSERT(not sarea.free_list()->next_free);
@@ -61,7 +61,7 @@ public:
 		SimulatedArea sarea(128, false);
 		sarea.add_block(0, 16 + sizeof(t_block), true).add_block(sizeof(t_block) * 2, 16, true);
 		auto* old_first_elem = sarea.free_list()->next_free;
-		t_block* block = alloc_block(TINY, sarea.d_free_list(), nullptr, 2);
+		t_block* block = alloc_block(TINY, sarea.d_free_list(), 2);
 		CPPUNIT_ASSERT(block);
 		CPPUNIT_ASSERT_EQUAL(2 + sizeof(t_block), block->size);
 		CPPUNIT_ASSERT_EQUAL(old_first_elem, sarea.free_list());
@@ -73,8 +73,8 @@ public:
 		SimulatedArea sarea2(64);
 		sarea.add_block(0, 2, true).add_block(sizeof(t_block) + 2, 16 + sizeof(t_block), true);
 		sarea.chain(sarea2);
-		auto* nxt = sarea.free_list()->next_free;
-		t_block* block = alloc_block(TINY, &nxt, sarea.free_list(), 12);
+		auto** nxt = &sarea.free_list()->next_free;
+		t_block* block = alloc_block(TINY, nxt, 12);
 		CPPUNIT_ASSERT(block);
 		CPPUNIT_ASSERT_EQUAL(12 + sizeof(t_block), block->size);
 		CPPUNIT_ASSERT_EQUAL(sarea2.free_list(), sarea.free_list()->next_free);
