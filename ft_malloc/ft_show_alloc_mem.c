@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 17:09:26 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/07 16:32:52 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/10 13:50:45 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ void		ft_show_alloc_mem(void)
 		ft_add_str_to_obuff(get_type_str(current.type), &obuff);
 		ft_add_str_to_obuff(" : ", &obuff);
 		add_ptr_to_obuff(current.area, &obuff);
+		ft_add_str_to_obuff(" - ", &obuff);
+		add_ptr_to_obuff((char*)current.area + current.area->size, &obuff);
 		ft_add_char_to_obuff('\n', &obuff);
 		display_blocks(&current, &total_size, &obuff);
 	}
