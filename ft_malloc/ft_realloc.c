@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/07 16:35:35 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/07 16:38:18 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/10 15:47:28 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,13 @@ void		*ft_realloc(void *ptr, size_t size)
 {
 	t_block_location	locations;
 
+	if (!ptr)
+		return (ft_malloc(size));
 	if (!size)
 		size = 16ul;
 	ft_bzero(&locations, sizeof(locations));
 	if (!(search_address(ptr, &locations)))
-		return (ft_malloc(size));
+		return (NULL);
 	if (locations.type != get_block_type(locations.loc->size - sizeof(t_block)))
 		return (free_and_malloc(&locations, size));
 	size += sizeof(t_block);
