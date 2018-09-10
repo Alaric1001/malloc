@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/10 10:35:33 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/10 10:38:50 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/10 15:58:07 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,5 +56,7 @@ void	*realloc(void *ptr, size_t size)
 
 void	show_alloc_mem(void)
 {
+	pthread_mutex_lock(&g_mutex);
 	ft_show_alloc_mem();
+	pthread_mutex_unlock(&g_mutex);
 }
