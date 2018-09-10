@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   remove_from_free_lst.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: asenat </var/spool/mail/asenat>            +#+  +:+       +#+        */
+/*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/07/02 13:36:20 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/03 14:19:32 by asenat           ###   ########.fr       */
+/*   Created: 2018/09/07 16:51:36 by asenat            #+#    #+#             */
+/*   Updated: 2018/09/07 16:52:42 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils/utils.h"
 
-void remove_from_free_lst(t_block_type type, const t_block *block)
+void	remove_from_free_lst(t_block_type type, const t_block *block)
 {
-	t_block* iterator;
+	t_block *iterator;
 	t_block *prev;
 
 	iterator = g_areas[type].free_blocks;
@@ -22,7 +22,7 @@ void remove_from_free_lst(t_block_type type, const t_block *block)
 	while (iterator && iterator != block)
 	{
 		prev = iterator;
-		iterator = iterator->next_free;	
+		iterator = iterator->next_free;
 	}
 	if (prev && iterator)
 		prev->next_free = iterator->next_free;

@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 14:58:59 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/07 11:21:33 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 15:10:42 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 t_block		*do_malloc(t_block_type type, size_t size)
 {
-	t_area **area;
+	t_area	**area;
 	t_block **current_free;
 	t_block	*tmp;
 
@@ -38,7 +38,7 @@ t_block		*do_malloc(t_block_type type, size_t size)
 	return (alloc_block(type, current_free, size));
 }
 
-t_block	*alloc_block(t_block_type type, t_block** it, size_t size)
+t_block		*alloc_block(t_block_type type, t_block **it, size_t size)
 {
 	t_block *ret;
 	t_block *next;
@@ -46,7 +46,7 @@ t_block	*alloc_block(t_block_type type, t_block** it, size_t size)
 
 	ret = *it;
 	if (ret->size < size + sizeof(t_block))
-		return NULL;
+		return (NULL);
 	rounded_size = round_size(type, size + sizeof(t_block));
 	if (ret->size > rounded_size + sizeof(t_block) + 1)
 	{
@@ -56,9 +56,9 @@ t_block	*alloc_block(t_block_type type, t_block** it, size_t size)
 		ret->next_free = next;
 	}
 	else if (ret->size != rounded_size)
-		return NULL;
+		return (NULL);
 	ret->size = size + sizeof(t_block);
 	*it = ret->next_free;
 	ret->next_free = NULL;
-	return ret;
+	return (ret);
 }

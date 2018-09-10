@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 11:27:06 by asenat            #+#    #+#             */
-/*   Updated: 2018/06/30 00:39:57 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 16:46:28 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ t_block_type	get_block_type(size_t size)
 	page_size = getpagesize();
 	if (size < (page_size * TINY_AREA_SIZE - sizeof(t_area)
 				- 100 * sizeof(t_block)) / 100)
-		return TINY;
+		return (TINY);
 	if (size < (page_size * SMALL_AREA_SIZE - sizeof(t_area)
 				- 100 * sizeof(t_block)) / 100)
-		return SMALL;
-	return LARGE;
+		return (SMALL);
+	return (LARGE);
 }

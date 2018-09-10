@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 18:00:01 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 17:08:50 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 15:23:13 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void			defrag_around_and_free(t_block_location *location)
 
 	current = location->loc;
 	prev_free = location->prev_free;
-	next = 	get_next_block(location->type, location->loc);
-	if (prev_free && prev_free->next_free == next )
+	next = get_next_block(location->type, location->loc);
+	if (prev_free && prev_free->next_free == next)
 	{
 		current->size = next->size + current->size;
 		prev_free->next_free = next->next_free;

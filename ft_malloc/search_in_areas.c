@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 17:01:37 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/04 12:10:25 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/10 14:25:55 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,14 @@
 #include "utils/utils.h"
 #include "libft/memory/memory.h"
 
-static int search_addr(const t_area *area,
+static int	search_addr(const t_area *area,
 		const char *adr, t_block_location *result)
 {
-	size_t cursor;
-	t_block *iterator;
+	size_t	cursor;
+	t_block	*iterator;
 
 	cursor = sizeof(t_area);
-	while ((intmax_t)(area->size - cursor) > (intmax_t)sizeof(t_block))
+	while ((intmax_t)(area->size - cursor) > (int)sizeof(t_block))
 	{
 		iterator = (t_block *)((char *)(area) + cursor);
 		if ((char*)(iterator + 1) == adr)
@@ -30,8 +30,6 @@ static int search_addr(const t_area *area,
 			result->loc = iterator;
 			return (1);
 		}
-		if (!iterator->size)
-			abort();
 		cursor += round_size(result->type, iterator->size);
 	}
 	return (0);
@@ -42,7 +40,8 @@ int			search_in_area(t_area *area,
 {
 	char	*area_pos;
 
-	while (area) {
+	while (area)
+	{
 		area_pos = (char*)area;
 		result->loc_area = area;
 		if (adr > area_pos && adr < area_pos + area->size)

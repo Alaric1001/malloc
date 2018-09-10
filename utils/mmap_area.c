@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/11 12:17:00 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/04 13:15:50 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 16:50:41 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ static size_t	get_total_allocated_memory(void)
 
 static size_t	avoid_overflow(t_block_type type, size_t area_size)
 {
-	int page_size;
-	int total_mem;
-	struct rlimit lim;
+	int				page_size;
+	int				total_mem;
+	struct rlimit	lim;
 
 	if (getrlimit(RLIMIT_DATA, &lim) == -1)
 		return (0);
 	total_mem = get_total_allocated_memory();
-	if  (total_mem + area_size < lim.rlim_cur)
+	if (total_mem + area_size < lim.rlim_cur)
 		return (area_size);
 	if (type == LARGE)
 		return (0);
@@ -44,7 +44,7 @@ static size_t	avoid_overflow(t_block_type type, size_t area_size)
 	return (area_size);
 }
 
-t_area*			mmap_area(t_block_type type, size_t size)
+t_area			*mmap_area(t_block_type type, size_t size)
 {
 	size_t	area_size;
 	t_area	*ret;
@@ -56,7 +56,7 @@ t_area*			mmap_area(t_block_type type, size_t size)
 		area_size = get_area_size(type);
 	if (!(area_size = avoid_overflow(type, area_size)))
 		return (NULL);
-	mapped_region =  mmap(0, area_size, PROT_READ | PROT_WRITE
+	mapped_region = mmap(0, area_size, PROT_READ | PROT_WRITE
 			, MAP_PRIVATE | MAP_ANONYMOUS, 0, 0);
 	if (mapped_region == MAP_FAILED)
 		return (NULL);

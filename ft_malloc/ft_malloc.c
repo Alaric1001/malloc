@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 10:45:34 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/05 16:08:31 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 15:08:33 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,12 @@
 #include "utils/utils.h"
 #include <stdio.h>
 
-t_area_container	g_areas[3] =	{{0, NULL, NULL},
-									{0, NULL, NULL},
-									{0, NULL, NULL}};
+t_area_container g_areas[3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+
 void	*ft_malloc(size_t size)
 {
 	t_block_type	type;
-	t_block*		ret;
+	t_block			*ret;
 
 	if (!size)
 		size = 16ul;
@@ -32,4 +31,3 @@ void	*ft_malloc(size_t size)
 		return (NULL);
 	return (ret + 1);
 }
-

@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/24 17:09:26 by asenat            #+#    #+#             */
-/*   Updated: 2018/07/04 00:11:02 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/07 16:32:52 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,20 @@
 #include "libft/output/obuff.h"
 #include "libft/memory/memory.h"
 
-static void add_ptr_to_obuff(const void* ptr, t_obuff *obuff)
+static void	add_ptr_to_obuff(const void *ptr, t_obuff *obuff)
 {
 	ft_add_uint_base_to_obuff((uintmax_t)ptr, "0123456789ABCDEF", obuff);
 }
 
-static void display_blocks(const t_area_and_type *val, size_t *total_size, t_obuff *obuff)
+static void	display_blocks(const t_area_and_type *val,
+		size_t *total_size, t_obuff *obuff)
 {
-	t_block *iterator;
-	size_t	cursor;
-	const t_area* area = val->area;
+	t_block			*iterator;
+	size_t			cursor;
+	const t_area	*area = val->area;
 
 	cursor = sizeof(t_area);
-	while ((intmax_t)(area->size - cursor) > (intmax_t)sizeof(t_block))
+	while ((intmax_t)(area->size - cursor) > (int)sizeof(t_block))
 	{
 		iterator = (t_block *)((char *)(area) + cursor);
 		add_ptr_to_obuff(iterator + 1, obuff);
@@ -43,21 +44,16 @@ static void display_blocks(const t_area_and_type *val, size_t *total_size, t_obu
 			ft_add_str_to_obuff(" -> free", obuff);
 		ft_add_char_to_obuff('\n', obuff);
 		(*total_size) += iterator->size - sizeof(t_block);
-		if (!round_size(val->type, iterator->size))
-		{
-			abort();
-			ft_flush_obuff(obuff);
-		}
 		cursor += round_size(val->type, iterator->size);
 	}
 }
 
-void			ft_show_alloc_mem()
+void		ft_show_alloc_mem(void)
 {
-	t_area_and_type current;
-	t_area* areas[3];
-	t_obuff obuff;
-	size_t	total_size;
+	t_area_and_type	current;
+	t_area			*areas[3];
+	t_obuff			obuff;
+	size_t			total_size;
 
 	total_size = 0;
 	areas[0] = g_areas[TINY].area;
