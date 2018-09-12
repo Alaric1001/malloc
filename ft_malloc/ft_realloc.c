@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/07 16:35:35 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/10 15:47:28 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/12 10:39:56 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,10 @@ static void	*free_and_malloc(t_block_location *locations, size_t size)
 	if (size < cpy)
 		cpy = size;
 	ft_memcpy(ret, locations->loc + 1, cpy);
-	free_location(locations);
+	if (locations->prev_free + 1 == (t_block*)ret)
+		ft_free(locations->loc + 1);
+	else
+		free_location(locations);
 	return (ret);
 }
 
@@ -44,8 +47,8 @@ static int	is_next_enough(const t_block_location *locations,
 		return (0);
 	total_size = round_size(locations->type,
 			locations->loc->size + next->size);
-	return (total_size == size || total_size
-			>= round_size(locations->type, size + sizeof(t_block) + 1));
+	return (total_size == r_size || total_size
+			>= round_size(locations->type, r_size + sizeof(t_block) + 1));
 }
 
 static void	*resize_with_next(t_block_location *locations,

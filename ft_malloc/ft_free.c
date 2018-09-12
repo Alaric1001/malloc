@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 13:19:51 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/10 13:11:04 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/12 16:17:35 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ void	free_location(t_block_location *locations)
 		if (locations->loc->size >= locations->loc_area->size
 				- sizeof(t_area))
 		{
-			remove_from_free_lst(locations->type, locations->loc);
+			remove_from_free_lst(locations->type,
+					locations->loc);
 			unmap_area(locations);
 		}
 	}

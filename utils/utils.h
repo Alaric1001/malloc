@@ -25,7 +25,9 @@ t_area_and_type	get_lowest_area(t_area **tiny, t_area **small, t_area **large);
 const char		*get_type_str(t_block_type type);
 int				is_in_free_list(const t_block *b, const t_block *free_list);
 t_block			*search_free_block(t_block_type type, const t_block *ref);
-void			remove_from_free_lst(t_block_type type, const t_block *block);
+void			remove_from_free_lst(t_block_type type, t_block *block);
+void			remove_from_free_lst_with_prev(t_block_type type,
+					t_block *block, t_block *prev);
 t_block			*get_next_block(t_block_type type, const t_block *block);
 
 #endif
