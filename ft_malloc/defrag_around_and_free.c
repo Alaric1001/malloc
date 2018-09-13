@@ -6,15 +6,13 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/19 18:00:01 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/07 15:23:13 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/13 13:19:33 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_malloc/algorithm.h"
 
 #include "utils/utils.h"
-
-#include <stdio.h>
 
 static void		join_prev(t_block_location *location)
 {
@@ -25,7 +23,8 @@ static void		join_prev(t_block_location *location)
 	prev_free = location->prev_free;
 	if (prev_free && (char*)current - (char*)prev_free == (long)prev_free->size)
 	{
-		prev_free->size = current->size + prev_free->size;
+		prev_free->size = round_size(location->type, current->size)
+			+ prev_free->size;
 		location->loc = prev_free;
 	}
 	else if (prev_free)
@@ -51,12 +50,12 @@ void			defrag_around_and_free(t_block_location *location)
 	next = get_next_block(location->type, location->loc);
 	if (prev_free && prev_free->next_free == next)
 	{
-		current->size = next->size + current->size;
+		current->size = next->size + round_size(location->type, current->size);
 		prev_free->next_free = next->next_free;
 	}
 	else if (!prev_free && g_areas[location->type].free_blocks == next)
 	{
-		current->size = next->size + current->size;
+		current->size = next->size + round_size(location->type, current->size);
 		g_areas[location->type].free_blocks = next->next_free;
 	}
 	join_prev(location);

@@ -17,7 +17,7 @@
 
 #ifdef FT_MALL_DEBUG
 #include "libft/output/obuff.h"
-static t_obuff			obuff = {.cursor = 0, .fd = 1};
+static t_obuff			obuff = {.cursor = 0, .fd = 2};
 #endif
 
 static pthread_mutex_t	g_mutex = PTHREAD_MUTEX_INITIALIZER;
