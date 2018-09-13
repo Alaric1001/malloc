@@ -6,7 +6,7 @@
 /*   By: asenat <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/16 13:19:51 by asenat            #+#    #+#             */
-/*   Updated: 2018/09/12 16:17:35 by asenat           ###   ########.fr       */
+/*   Updated: 2018/09/12 17:22:50 by asenat           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,8 @@ void	free_location(t_block_location *locations)
 	{
 		defrag_around_and_free(locations);
 		if (locations->loc->size >= locations->loc_area->size
-				- sizeof(t_area))
+				- sizeof(t_area) && !(g_areas[locations->type].area ==
+					locations->loc_area && !locations->loc_area->next))
 		{
 			remove_from_free_lst(locations->type,
 					locations->loc);
